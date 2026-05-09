@@ -32,7 +32,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .mob a:hover{color:var(--gray);}
 .mob-x{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--gray);font-size:1.6rem;cursor:pointer;}
 .hero{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5% 6rem;}
-.hero-img{position:absolute;inset:0;background:url('images/hero-gemini.png') center/cover no-repeat;filter:grayscale(40%) contrast(1.25) brightness(.9);animation:hzoom 24s ease-in-out infinite alternate;}
+.hero-img{position:absolute;inset:0;background:url('images/hero-gemini.jpg') center top/cover no-repeat;filter:grayscale(40%) contrast(1.25) brightness(.9);animation:hzoom 24s ease-in-out infinite alternate;}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,.05) 55%,rgba(0,0,0,.9) 100%),linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 65%);}
 @keyframes hzoom{from{transform:scale(1.02)}to{transform:scale(1.08)}}
 .hero-content{position:relative;z-index:2;max-width:850px;}
@@ -130,8 +130,8 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
 .foot-links a:hover{color:var(--white);}
 @media(max-width:1024px){.featured-grid{grid-template-columns:repeat(2,1fr);}.financia{grid-template-columns:1fr;gap:3rem;}.contact-grid{grid-template-columns:1fr;gap:3rem;}.stats{grid-template-columns:repeat(2,1fr);}.stat:nth-child(2){border-right:none;}.cat-cta{flex-direction:column;align-items:flex-start;}}
 @media(max-width:768px){.nav-links,.nav-cta{display:none;}.nav-burger{display:block;}.frow{grid-template-columns:1fr;}.foot{flex-direction:column;text-align:center;}.foot-links{justify-content:center;}.hero{padding:0 6% 4rem;}.hero-sub{font-size:.88rem;max-width:100%;}.hero-btns{flex-direction:column;}.btn-white,.btn-border{text-align:center;}}
-@media(max-width:768px){.hero-img{background-position:60% center;}}
-@media(max-width:540px){.featured-grid{grid-template-columns:1fr;}.hero-img{background-position:65% center;}.stats{grid-template-columns:repeat(2,1fr);}.pickup-img{background-position:70% 65%;}}
+@media(max-width:768px){.hero-img{background-position:30% top;}}
+@media(max-width:540px){.featured-grid{grid-template-columns:1fr;}.hero-img{background-position:25% top;}.stats{grid-template-columns:repeat(2,1fr);}.pickup-img{background-position:70% 65%;}}
 </style>
 </head>
 <body>

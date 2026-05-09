@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Admin — Legarreta Automotores</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{--black:#000;--dark:#0a0a0a;--card:#111;--border:#222;--white:#fff;--gray:#888;--green:#22c55e;--red:#ef4444;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--dark);color:var(--white);min-height:100vh;}
+/* LOGIN */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+.login-box{background:var(--card);border:1px solid var(--border);padding:2.5rem;width:100%;max-width:380px;border-radius:12px;}
+.login-logo{font-family:'Georgia',serif;font-size:1.4rem;letter-spacing:.1em;margin-bottom:.3rem;}
+.login-sub{color:var(--gray);font-size:.8rem;margin-bottom:2rem;}
+/* ADMIN */
+#admin{display:none;max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.admin-logo{font-size:1rem;letter-spacing:.15em;font-weight:600;}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--gray);padding:.4rem .9rem;font-size:.72rem;cursor:pointer;border-radius:6px;}
+.btn-logout:hover{border-color:var(--white);color:var(--white);}
+/* TABS */
+.tabs{display:flex;gap:1px;background:var(--border);border-radius:8px;overflow:hidden;margin-bottom:2rem;}
+.tab{flex:1;padding:.7rem;text-align:center;font-size:.78rem;font-weight:600;letter-spacing:.06em;cursor:pointer;background:var(--card);color:var(--gray);transition:all .2s;}
+.tab.active{background:var(--white);color:var(--black);}
+/* FORM */
+.section{display:none;}
+.section.active{display:block;}
+.form-group{margin-bottom:1.2rem;}
+label{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:.5rem;}
+input,select,textarea{width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--white);padding:.75rem 1rem;font-size:.9rem;border-radius:8px;font-family:inherit;transition:border-color .2s;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(255,255,255,.4);}
+select option{background:#1a1a1a;}
+textarea{min-height:80px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+/* FOTO UPLOAD */
+.upload-area{border:2px dashed var(--border);border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.upload-area:hover,.upload-area.drag{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.03);}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-icon{font-size:2rem;margin-bottom:.5rem;}
+.upload-text{font-size:.82rem;color:var(--gray);}
+.upload-hint{font-size:.72rem;color:#555;margin-top:.3rem;}
+.previews{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem;}
+.preview-item{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:#1a1a1a;}
+.preview-item img{width:100%;height:100%;object-fit:cover;}
+.preview-item .remove{position:absolute;top:.3rem;right:.3rem;background:rgba(0,0,0,.7);border:none;color:white;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;}
+.progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:.5rem;overflow:hidden;}
+.progress-fill{height:100%;background:var(--green);transition:width .3s;width:0;}
+/* BOTÓN SUBMIT */
+.btn-submit{width:100%;background:var(--white);color:var(--black);border:none;padding:1rem;font-size:.82rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:8px;margin-top:1.5rem;transition:all .2s;}
+.btn-submit:hover{background:#e8e8e8;}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed;}
+/* LISTA */
+.vehicle-list{display:flex;flex-direction:column;gap:.8rem;}
+.v-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;gap:1rem;align-items:center;}
+.v-thumb{width:72px;height:54px;border-radius:6px;object-fit:cover;background:#1a1a1a;flex-shrink:0;}
+.v-thumb-empty{width:72px;height:54px;border-radius:6px;background:#1a1a1a;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#444;font-size:.7rem;}
+.v-info{flex:1;min-width:0;}
+.v-marca{font-size:.65rem;color:var(--gray);letter-spacing:.12em;text-transform:uppercase;}
+.v-modelo{font-size:.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v-meta{font-size:.72rem;color:var(--gray);margin-top:.2rem;}
+.v-actions{display:flex;gap:.5rem;flex-shrink:0;}
+.btn-del{background:none;border:1px solid #333;color:var(--gray);padding:.35rem .7rem;font-size:.7rem;border-radius:6px;cursor:pointer;transition:all .2s;}
+.btn-del:hover{border-color:var(--red);color:var(--red);}
+.btn-toggle{background:none;border:1px solid #333;color:var(--gray);padding:.35rem .7rem;font-size:.7rem;border-radius:6px;cursor:pointer;transition:all .2s;}
+.btn-toggle.activo{border-color:#333;color:var(--green);}
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--border);color:var(--white);padding:.8rem 1.5rem;border-radius:8px;font-size:.82rem;transition:transform .3s;z-index:999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:var(--green);color:var(--green);}
+.toast.err{border-color:var(--red);color:var(--red);}
+/* UTILS */
+.label-input{display:flex;align-items:center;gap:.5rem;}
+.badge{font-size:.6rem;background:#333;color:#aaa;padding:.15rem .4rem;border-radius:4px;letter-spacing:.06em;}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--gray);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">LEGARRETA</div>
+    <div class="login-sub">Panel de administración</div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-submit" onclick="doLogin()" style="margin-top:0">Ingresar</button>
+    <div id="login-err" style="color:var(--red);font-size:.78rem;margin-top:.8rem;display:none;">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin">
+  <div class="admin-header">
+    <div class="admin-logo">LEGARRETA · ADMIN</div>
+    <button class="btn-logout" onclick="doLogout()">Salir</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="setTab('nuevo')">+ Nuevo vehículo</div>
+    <div class="tab" onclick="setTab('lista')">Mis vehículos</div>
+  </div>
+
+  <!-- NUEVO -->
+  <div class="section active" id="sec-nuevo">
+    <form id="vform" onsubmit="submitVehiculo(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Marca</label>
+          <input type="text" id="f-marca" placeholder="Ford" required>
+        </div>
+        <div class="form-group">
+          <label>Modelo</label>
+          <input type="text" id="f-modelo" placeholder="Ranger Raptor" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Año</label>
+          <input type="number" id="f-anio" placeholder="2024" min="1990" max="2030">
+        </div>
+        <div class="form-group">
+          <label>Tipo</label>
+          <select id="f-tipo">
+            <option value="Pick Up">Pick Up</option>
+            <option value="SUV">SUV</option>
+            <option value="Sport">Sport</option>
+            <option value="Sedan">Sedan</option>
+            <option value="Moto">Moto</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Precio USD <span class="badge">opcional</span></label>
+        <input type="number" id="f-precio" placeholder="35000">
+      </div>
+      <div class="form-group">
+        <label>Descripción <span class="badge">opcional</span></label>
+        <textarea id="f-desc" placeholder="4x4, automático, full equipo..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Fotos</label>
+        <div class="upload-area" id="drop-zone">
+          <input type="file" id="foto-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">Tocá para agregar fotos</div>
+          <div class="upload-hint">JPG, PNG, HEIC · hasta 10MB cada una</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="previews" id="previews"></div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-guardar">Guardar vehículo</button>
+    </form>
+  </div>
+
+  <!-- LISTA -->
+  <div class="section" id="sec-lista">
+    <div class="vehicle-list" id="vlist">
+      <div class="empty-state">Cargando...</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
+const SERVICE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQ0NjEwMSwiZXhwIjoyMDkyMDIyMTAxfQ.4zr91CpOYGIofIRmEI-bva_Aq_DCBXyhSNfy-yIGbJ0';
+const BUCKET = 'legarreta-fotos';
+const PWD = 'legarreta2024';
+
+let pendingFiles = [];
+
+// AUTH
+function doLogin() {
+  const v = document.getElementById('pwd').value;
+  if (v === PWD) {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('admin').style.display = 'block';
+    sessionStorage.setItem('la_auth', '1');
+    loadVehiculos();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+function doLogout() {
+  sessionStorage.removeItem('la_auth');
+  location.reload();
+}
+document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+if (sessionStorage.getItem('la_auth')) {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('admin').style.display = 'block';
+  loadVehiculos();
+}
+
+// TABS
+function setTab(t) {
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', (t==='nuevo'&&i===0)||(t==='lista'&&i===1)));
+  document.getElementById('sec-nuevo').classList.toggle('active', t==='nuevo');
+  document.getElementById('sec-lista').classList.toggle('active', t==='lista');
+  if (t==='lista') loadVehiculos();
+}
+
+// FOTOS
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    if (f.size > 10*1024*1024) { toast('Foto muy grande: '+f.name, 'err'); return; }
+    pendingFiles.push(f);
+    const reader = new FileReader();
+    reader.onload = e => addPreview(e.target.result, pendingFiles.length-1);
+    reader.readAsDataURL(f);
+  });
+}
+function addPreview(src, idx) {
+  const d = document.createElement('div');
+  d.className = 'preview-item';
+  d.dataset.idx = idx;
+  d.innerHTML = `<img src="${src}"><button class="remove" onclick="removePreview(${idx})">✕</button>`;
+  document.getElementById('previews').appendChild(d);
+}
+function removePreview(idx) {
+  pendingFiles[idx] = null;
+  document.querySelector(`.preview-item[data-idx="${idx}"]`)?.remove();
+}
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
+
+// UPLOAD FOTO
+async function uploadFoto(file, vehiculoId, i) {
+  const ext = file.name.split('.').pop().toLowerCase().replace('heic','jpg');
+  const path = `${vehiculoId}/${Date.now()}_${i}.${ext}`;
+  const res = await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': file.type || 'image/jpeg' },
+    body: file
+  });
+  if (!res.ok) throw new Error('Error subiendo foto');
+  return `${SUPA}/storage/v1/object/public/${BUCKET}/${path}`;
+}
+
+// SUBMIT
+async function submitVehiculo(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+
+  try {
+    // 1. Crear vehículo en Supabase
+    const body = {
+      marca: document.getElementById('f-marca').value.trim().toUpperCase(),
+      modelo: document.getElementById('f-modelo').value.trim().toUpperCase(),
+      anio: parseInt(document.getElementById('f-anio').value) || null,
+      tipo: document.getElementById('f-tipo').value,
+      precio: parseInt(document.getElementById('f-precio').value) || null,
+      descripcion: document.getElementById('f-desc').value.trim() || null,
+      fotos: [],
+      activo: true
+    };
+    const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta`, {
+      method: 'POST',
+      headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(body)
+    });
+    const [vehiculo] = await res.json();
+    const vid = vehiculo.id;
+
+    // 2. Subir fotos
+    const files = pendingFiles.filter(Boolean);
+    const urls = [];
+    const prog = document.getElementById('progress');
+    for (let i = 0; i < files.length; i++) {
+      prog.style.width = `${((i+1)/files.length)*100}%`;
+      const url = await uploadFoto(files[i], vid, i);
+      urls.push(url);
+    }
+
+    // 3. Actualizar fotos en el vehículo
+    if (urls.length) {
+      await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${vid}`, {
+        method: 'PATCH',
+        headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fotos: urls })
+      });
+    }
+
+    toast('Vehículo guardado', 'ok');
+    document.getElementById('vform').reset();
+    pendingFiles = [];
+    document.getElementById('previews').innerHTML = '';
+    prog.style.width = '0';
+    setTab('lista');
+  } catch(err) {
+    toast('Error: ' + err.message, 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Guardar vehículo';
+  }
+}
+
+// LISTA
+async function loadVehiculos() {
+  const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&order=created_at.desc`, {
+    headers: { 'apikey': ANON }
+  });
+  const data = await res.json();
+  const el = document.getElementById('vlist');
+  if (!data.length) { el.innerHTML = '<div class="empty-state">No hay vehículos aún</div>'; return; }
+  el.innerHTML = data.map(v => `
+    <div class="v-card" id="vc-${v.id}">
+      ${v.fotos?.length ? `<img class="v-thumb" src="${v.fotos[0]}" loading="lazy">` : '<div class="v-thumb-empty">Sin foto</div>'}
+      <div class="v-info">
+        <div class="v-marca">${v.marca}</div>
+        <div class="v-modelo">${v.modelo} ${v.anio||''}</div>
+        <div class="v-meta">${v.tipo}${v.precio?' · USD '+v.precio.toLocaleString('es-AR'):''} · ${v.fotos?.length||0} foto${v.fotos?.length!==1?'s':''}</div>
+      </div>
+      <div class="v-actions">
+        <button class="btn-toggle ${v.activo?'activo':''}" onclick="toggleActivo('${v.id}',${v.activo})">${v.activo?'ON':'OFF'}</button>
+        <button class="btn-del" onclick="deleteVehiculo('${v.id}')">Eliminar</button>
+      </div>
+    </div>`).join('');
+}
+
+async function toggleActivo(id, actual) {
+  await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ activo: !actual })
+  });
+  loadVehiculos();
+}
+
+async function deleteVehiculo(id) {
+  if (!confirm('¿Eliminar este vehículo?')) return;
+  await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`, {
+    method: 'DELETE',
+    headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}` }
+  });
+  document.getElementById('vc-'+id)?.remove();
+  toast('Eliminado', 'ok');
+}
+
+// TOAST
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+</script>
+</body>
+</html>

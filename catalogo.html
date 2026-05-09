@@ -213,14 +213,32 @@ const CARS=[
   {id:44,cat:'Auto',   marca:'VOLKSWAGEN',   modelo:'GOLF GTI MK6',              año:2013,km:145000,precio:19000,img:'images/cars/golf-gti-2013.jpg'},
   {id:45,cat:'Auto',   marca:'VOLKSWAGEN',   modelo:'THE BEETLE 1.4 TSI MANUAL', año:2015,km:120000,precio:16500},
 ];
+const SUPA='https://pgnmpxqljxrpnvexcygh.supabase.co';
+const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
+let CARS_DB=[];
 let S={cat:'all',marca:'',precio:'',q:''};
-const iKm='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2.5 2.5"/></svg>';
-const iCal='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 const iArr='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-const logo='';
 
-function init(){
-  const marcas=[...new Set(CARS.map(c=>c.marca))].sort();
+async function init(){
+  // Cargar de Supabase primero, fallback al array hardcodeado
+  try {
+    const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&activo=eq.true&order=created_at.desc`, {
+      headers: { 'apikey': ANON }
+    });
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) {
+      CARS_DB = data.map(v => ({
+        id: v.id, cat: v.tipo||'Otro', marca: v.marca, modelo: v.modelo,
+        año: v.anio, precio: v.precio, img: v.fotos?.[0]||null,
+        descripcion: v.descripcion
+      }));
+    } else {
+      CARS_DB = CARS; // fallback al array
+    }
+  } catch(e) {
+    CARS_DB = CARS;
+  }
+  const marcas=[...new Set(CARS_DB.map(c=>c.marca))].sort();
   const sel=document.getElementById('fM');
   marcas.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;sel.appendChild(o);});
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
@@ -246,7 +264,7 @@ function reset(){
   render();
 }
 function getFiltered(){
-  return CARS.filter(c=>{
+  return CARS_DB.filter(c=>{
     if(S.cat!=='all'&&c.cat!==S.cat)return false;
     if(S.marca&&c.marca!==S.marca)return false;
     if(S.q&&!`${c.marca} ${c.modelo}`.toLowerCase().includes(S.q))return false;
@@ -256,23 +274,19 @@ function getFiltered(){
 }
 function render(){
   const cars=getFiltered();
-  document.getElementById('rcount').innerHTML=`<strong>${cars.length}</strong> vehículos · precios en USD`;
+  document.getElementById('rcount').innerHTML=`<strong>${cars.length}</strong> vehículos`;
   if(!cars.length){document.getElementById('grid').innerHTML=`<div class="empty"><p>Sin resultados para ese filtro.</p></div>`;return;}
   document.getElementById('grid').innerHTML=cars.map(c=>`
     <div class="car-card">
-      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy">`:`<div class="card-img-placeholder">${logo}</div>`}</div>
+      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy">`:`<div class="card-img-placeholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:#333;font-size:.75rem;">Sin foto</div>`}</div>
       <div class="card-body">
         <div class="card-cat">${c.cat}</div>
         <div class="card-marca">${c.marca}</div>
-        <div class="card-modelo">${c.modelo}</div>
-        <div class="card-specs">
-          <span class="card-spec">${iKm}&nbsp;${c.km!==null?c.km.toLocaleString('es-AR')+' km':'0 km'}</span>
-          <span class="card-spec">${iCal}&nbsp;${c.año}</span>
-        </div>
+        <div class="card-modelo">${c.modelo}${c.año?' '+c.año:''}</div>
         <div class="card-sep"></div>
         <div class="card-foot">
-          <div>${c.precio!==null?`<span class="card-price"><span class="card-curr">USD</span>${c.precio.toLocaleString('es-AR')}</span>`:`<span class="card-noprice">Consultar precio</span>`}</div>
-          <a class="card-wa" href="https://wa.me/${WA}?text=${encodeURIComponent('Hola Legarreta, vi en el catálogo el '+c.marca+' '+c.modelo+' '+c.año+' y quiero más info.')}" target="_blank">Consultar&nbsp;${iArr}</a>
+          <div>${c.precio!==null&&c.precio!==undefined?`<span class="card-price"><span class="card-curr">USD</span>${c.precio.toLocaleString('es-AR')}</span>`:`<span class="card-noprice">Consultar precio</span>`}</div>
+          <a class="card-wa" href="https://wa.me/${WA}?text=${encodeURIComponent('Hola Legarreta, vi en el catálogo el '+c.marca+' '+c.modelo+' y quiero más info.')}" target="_blank">Consultar&nbsp;${iArr}</a>
         </div>
       </div>
     </div>`).join('');

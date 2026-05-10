@@ -133,6 +133,13 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
 .foot-links a{color:var(--gray2);font-size:.72rem;text-decoration:none;letter-spacing:.08em;transition:color .2s;}
 .foot-links a:hover{color:var(--white);}
 #footSocial a{color:var(--gray2);transition:color .2s;}#footSocial a:hover{color:var(--white);}
+.testi{background:var(--black);padding:6rem 5%;border-top:1px solid var(--border);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem;}
+.testi-card{background:var(--card);padding:2.5rem 2rem;display:flex;flex-direction:column;gap:1.5rem;}
+.testi-stars{color:var(--white);letter-spacing:.3rem;font-size:.9rem;}
+.testi-text{color:rgba(255,255,255,.55);font-size:.84rem;line-height:1.9;font-style:italic;flex:1;}
+.testi-name{font-weight:600;font-size:.82rem;}.testi-sub{color:var(--gray);font-size:.72rem;margin-top:.2rem;}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr;}}
 @media(max-width:1024px){.featured-grid{grid-template-columns:repeat(2,1fr);}.financia{grid-template-columns:1fr;gap:3rem;}.contact-grid{grid-template-columns:1fr;gap:3rem;}.stats{grid-template-columns:repeat(2,1fr);}.stat:nth-child(2){border-right:none;}.cat-cta{flex-direction:column;align-items:flex-start;}}
 @media(max-width:768px){.nav-links,.nav-cta{display:none;}.nav-burger{display:block;}.frow{grid-template-columns:1fr;}.foot{flex-direction:column;text-align:center;}.foot-links{justify-content:center;}.hero{padding:0 6% 4rem;}.hero-sub{font-size:.88rem;max-width:100%;}.hero-btns{flex-direction:column;}.btn-white,.btn-border{text-align:center;}}
 @media(max-width:768px){.hero-img{background-position:30% top!important;}}
@@ -198,6 +205,39 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
   </div>
   <a href="catalogo.html" class="btn-cat">Ver todos los autos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 </div>
+
+<section class="testi" id="clientes">
+  <div class="sec-head">
+    <div class="eyebrow">Clientes</div>
+    <h2 class="sec-title">LO QUE<br>DICEN</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Compré mi Hilux SRX acá. Todo transparente desde el primer mensaje de WhatsApp. En tres días ya me la estaba llevando."</p>
+      <div class="testi-author">
+        <div class="testi-name">Sebastián M.</div>
+        <div class="testi-sub">Tandil · Hilux SRX 2020</div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Me asesoraron muy bien para la financiación en dólares. Sin letra chica, sin sorpresas. Superó mis expectativas."</p>
+      <div class="testi-author">
+        <div class="testi-name">Florencia R.</div>
+        <div class="testi-sub">Buenos Aires · Ford Ranger 2024</div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Pedí más fotos del Amarok V6 a las 10 de la noche y me contestaron al toque. Excelente atención, muy serios."</p>
+      <div class="testi-author">
+        <div class="testi-name">Matías K.</div>
+        <div class="testi-sub">Mar del Plata · Amarok V6 2023</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <div class="pickup">
   <div class="pickup-img" id="pickupImg"></div>
@@ -432,6 +472,25 @@ fetch(_SUPA + '/rest/v1/vehiculos_legarreta?select=id&activo=eq.true', {
     if(statNs[0]) statNs[0].textContent = n + '+';
   }
 }).catch(function(){});
+
+// ── WhatsApp flotante contextual ──────────────────────────────────────────
+var _waFloat = document.getElementById('waFloat');
+var _waMsgs = {
+  'inicio':     'Hola Legarreta, entré al sitio y quiero consultar por un vehículo.',
+  'destacados': 'Hola Legarreta, vi los vehículos destacados y me interesa consultar.',
+  'clientes':   'Hola Legarreta, vi las reseñas y quiero consultar por un vehículo.',
+  'contacto':   'Hola Legarreta, quiero coordinar una visita al local.',
+};
+(new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if(entry.isIntersecting) _waFloat.href = wa(_waMsgs[entry.target.id] || _waMsgs['inicio']);
+  });
+}, { threshold: 0.3 })).observe ? ['inicio','destacados','clientes','contacto'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if(el) (new IntersectionObserver(function(entries) {
+    entries.forEach(function(e){ if(e.isIntersecting) _waFloat.href = wa(_waMsgs[id]); });
+  }, { threshold: 0.3 })).observe(el);
+}) : null;
 
 // ── Interacciones ──────────────────────────────────────────────────────────
 

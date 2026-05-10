@@ -4,9 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catálogo — Legarreta Automotores</title>
+<!-- preconnect críticos -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://pgnmpxqljxrpnvexcygh.supabase.co">
+<!-- fonts no bloqueantes -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" onload="this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"></noscript>
 <style>
 :root{--black:#000;--dark:#080808;--card:#0f0f0f;--border:#1a1a1a;--b2:#262626;--white:#fff;--off:#e8e8e8;--gray:#737373;--gray2:#383838;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
@@ -49,7 +53,16 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .rcount{font-size:.7rem;color:var(--gray);letter-spacing:.1em;padding-bottom:1.5rem;margin-bottom:2rem;border-bottom:1px solid var(--border);}
 .rcount strong{color:var(--white);}
 .cars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
-.car-card{background:var(--card);padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:background .2s;}
+.car-card{background:var(--card);padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:background .2s;contain:layout style;}
+/* skeleton */
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.skeleton{background:var(--b2);background-image:linear-gradient(90deg,var(--b2) 0%,#333 40%,var(--b2) 80%);background-size:800px 100%;animation:shimmer 1.4s infinite linear;}
+.sk-img{width:100%;height:200px;}
+.sk-line{height:10px;border-radius:4px;margin-bottom:.7rem;}
+.sk-line.w80{width:80%;}
+.sk-line.w50{width:50%;}
+.sk-line.w30{width:30%;}
+.sk-body{padding:1.8rem;}
 .car-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--white);transform:scaleX(0);transform-origin:left;transition:transform .35s;}
 .car-card:hover{background:#131313;}
 .car-card:hover::before{transform:scaleX(1);}
@@ -231,6 +244,8 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
 
 <script>
 const WA='542494585374';
+const CACHE_KEY='la_cars_v2';
+const CACHE_TTL=5*60*1000; // 5 min
 const CARS=[
   {id:1, cat:'SUV',    marca:'AUDI',         modelo:'Q5 STRONIC 252HP',          año:2018,km:110000,precio:38000},
   {id:2, cat:'SUV',    marca:'FORD',         modelo:'ECOSPORT 1.5 TITANIUM',     año:2020,km:40000, precio:18500},
@@ -284,29 +299,30 @@ let CARS_DB=[];
 let S={cat:'all',marca:'',precio:'',q:''};
 const iArr='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 
+function mapSupa(v){
+  return {
+    id:v.id, cat:v.tipo||'Otro', marca:v.marca, modelo:v.modelo,
+    año:v.anio, km:v.km, precio:v.precio,
+    img:v.fotos?.[0]||null, fotos:v.fotos||[],
+    descripcion:v.descripcion
+  };
+}
+function mapLocal(c){ return {...c, fotos:c.img?[c.img]:[] }; }
+
+function showSkeletons(n=9){
+  document.getElementById('grid').innerHTML=Array(n).fill(`
+    <div class="car-card">
+      <div class="sk-img skeleton"></div>
+      <div class="sk-body">
+        <div class="sk-line w30 skeleton"></div>
+        <div class="sk-line w80 skeleton"></div>
+        <div class="sk-line w50 skeleton" style="margin-top:1.4rem;"></div>
+      </div>
+    </div>`).join('');
+}
+
 async function init(){
-  // Cargar de Supabase primero, fallback al array hardcodeado
-  try {
-    const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&activo=eq.true&order=created_at.desc`, {
-      headers: { 'apikey': ANON }
-    });
-    const data = await res.json();
-    if (Array.isArray(data) && data.length) {
-      CARS_DB = data.map(v => ({
-        id: v.id, cat: v.tipo||'Otro', marca: v.marca, modelo: v.modelo,
-        año: v.anio, km: v.km, precio: v.precio,
-        img: v.fotos?.[0]||null, fotos: v.fotos||[],
-        descripcion: v.descripcion
-      }));
-    } else {
-      CARS_DB = CARS.map(c=>({...c, fotos: c.img?[c.img]:[]}));
-    }
-  } catch(e) {
-    CARS_DB = CARS.map(c=>({...c, fotos: c.img?[c.img]:[]}));
-  }
-  const marcas=[...new Set(CARS_DB.map(c=>c.marca))].sort();
-  const sel=document.getElementById('fM');
-  marcas.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;sel.appendChild(o);});
+  // 1. Registrar event listeners de inmediato (no dependen de los datos)
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');S.cat=b.dataset.cat;render();
@@ -317,9 +333,54 @@ async function init(){
   document.getElementById('fReset').addEventListener('click',reset);
   document.getElementById('burger').addEventListener('click',()=>document.getElementById('mob').classList.add('open'));
   document.getElementById('mobX').addEventListener('click',closeMob);
-  const p=new URLSearchParams(location.search);
-  if(p.get('cat')){const t=document.querySelector(`[data-cat="${p.get('cat')}"]`);if(t){t.click();}}
+
+  // 2. Mostrar skeletons mientras carga
+  showSkeletons();
+
+  // 3. Caché → renderizado instantáneo en visitas recurrentes
+  let fromCache = false;
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
+    if(cached && Date.now()-cached.ts < CACHE_TTL && cached.data.length){
+      CARS_DB = cached.data;
+      buildFilters();
+      const p=new URLSearchParams(location.search);
+      if(p.get('cat')){const t=document.querySelector(`[data-cat="${p.get('cat')}"]`);if(t){t.classList.add('active');document.querySelector('[data-cat="all"]').classList.remove('active');S.cat=p.get('cat');}}
+      render();
+      fromCache = true;
+    }
+  } catch(_){}
+
+  // 4. Fetch Supabase (siempre, para mantener datos frescos)
+  try {
+    const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&activo=eq.true&order=created_at.desc`, {
+      headers: { 'apikey': ANON }
+    });
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) {
+      CARS_DB = data.map(mapSupa);
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), data:CARS_DB}));
+    } else if(!CARS_DB.length) {
+      CARS_DB = CARS.map(mapLocal);
+    }
+  } catch(e) {
+    if(!CARS_DB.length) CARS_DB = CARS.map(mapLocal);
+  }
+
+  // 5. Render final (primera vez o actualización post-caché)
+  buildFilters();
+  if(!fromCache){
+    const p=new URLSearchParams(location.search);
+    if(p.get('cat')){const t=document.querySelector(`[data-cat="${p.get('cat')}"]`);if(t){t.classList.add('active');document.querySelector('[data-cat="all"]').classList.remove('active');S.cat=p.get('cat');}}
+  }
   render();
+}
+function buildFilters(){
+  const sel=document.getElementById('fM');
+  // Limpiar opciones previas excepto la primera
+  while(sel.options.length>1) sel.remove(1);
+  const marcas=[...new Set(CARS_DB.map(c=>c.marca))].sort();
+  marcas.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;sel.appendChild(o);});
 }
 function closeMob(){document.getElementById('mob').classList.remove('open');}
 function reset(){
@@ -344,7 +405,7 @@ function render(){
   if(!cars.length){document.getElementById('grid').innerHTML=`<div class="empty"><p>Sin resultados para ese filtro.</p></div>`;return;}
   document.getElementById('grid').innerHTML=cars.map(c=>`
     <div class="car-card" onclick="openModal(${c.id})">
-      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}</div>
+      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy" decoding="async" width="400" height="200">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}</div>
       <div class="card-body">
         <div class="card-cat">${c.cat}</div>
         <div class="card-marca">${c.marca}</div>

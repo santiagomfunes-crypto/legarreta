@@ -117,6 +117,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .card-modelo{font-size:.95rem;font-weight:600;line-height:1.3;margin-bottom:1rem;flex:1;}
 .card-specs{display:flex;gap:1.2rem;font-size:.72rem;color:var(--gray);padding-bottom:1.5rem;}
 .card-spec{display:flex;align-items:center;gap:.3rem;}
+.card-km{font-size:.68rem;color:var(--gray);margin-bottom:.6rem;letter-spacing:.04em;}
 .card-sep{height:1px;background:var(--border);margin-bottom:1.5rem;}
 .card-foot{display:flex;align-items:center;justify-content:space-between;}
 .card-price{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;}
@@ -242,6 +243,13 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
   </div>
   <div class="filters">
     <select class="fsel" id="fM"><option value="">Todas las marcas</option></select>
+    <select class="fsel" id="fK">
+      <option value="">Cualquier km</option>
+      <option value="0-30000">Hasta 30.000 km</option>
+      <option value="0-80000">Hasta 80.000 km</option>
+      <option value="0-150000">Hasta 150.000 km</option>
+      <option value="150001-999999">Más de 150.000 km</option>
+    </select>
     <div class="price-slider-wrap">
       <div class="price-slider-labels">
         <span>Precio máx:</span>
@@ -381,7 +389,7 @@ const CARS=[
 const SUPA='https://pgnmpxqljxrpnvexcygh.supabase.co';
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
 let CARS_DB=[];
-let S={cat:'all',marca:'',precio:'',q:''};
+let S={cat:'all',marca:'',km:'',precio:'',q:''};
 const iArr='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 
 function mapSupa(v){
@@ -416,6 +424,7 @@ async function init(){
     b.classList.add('active');S.cat=b.dataset.cat;render();
   }));
   document.getElementById('fM').addEventListener('change',e=>{S.marca=e.target.value;render();});
+  document.getElementById('fK').addEventListener('change',e=>{S.km=e.target.value;render();});
   document.getElementById('fP').addEventListener('input', function(e) {
     S.precio = parseInt(e.target.value);
     var label = S.precio >= 80000 ? 'Sin límite' : 'Hasta USD ' + S.precio.toLocaleString('es-AR');
@@ -479,10 +488,10 @@ function buildFilters(){
 }
 function closeMob(){document.getElementById('mob').classList.remove('open');}
 function reset(){
-  S={cat:'all',marca:'',precio:'',q:''};
+  S={cat:'all',marca:'',km:'',precio:'',q:''};
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.querySelector('[data-cat="all"]').classList.add('active');
-  ['fM','fQ'].forEach(id=>document.getElementById(id).value='');
+  ['fM','fK','fQ'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fP').value = '80000';
   document.getElementById('fPLabel').textContent = 'Sin límite';
   render();
@@ -492,6 +501,7 @@ function getFiltered(){
     if(S.cat!=='all'&&c.cat!==S.cat)return false;
     if(S.marca&&c.marca!==S.marca)return false;
     if(S.q&&!`${c.marca} ${c.modelo}`.toLowerCase().includes(S.q))return false;
+    if(S.km&&c.km!=null){const[mn,mx]=S.km.split('-').map(Number);if(c.km<mn||c.km>mx)return false;}
     if(S.precio && S.precio < 80000 && c.precio !== null && c.precio > S.precio) return false;
     return true;
   });
@@ -507,6 +517,7 @@ function render(){
         <div class="card-cat">${c.cat}</div>
         <div class="card-marca">${c.marca}</div>
         <div class="card-modelo">${c.modelo}${c.año?' '+c.año:''}</div>
+        ${c.km!=null?`<div class="card-km">${c.km===0?'0 km':c.km.toLocaleString('es-AR')+' km'}</div>`:''}
         <div class="card-sep"></div>
         <div class="card-foot">
           <div>${c.precio!==null&&c.precio!==undefined?`<span class="card-price"><span class="card-curr">USD</span>${c.precio.toLocaleString('es-AR')}</span>`:`<span class="card-noprice">Consultar precio</span>`}</div>

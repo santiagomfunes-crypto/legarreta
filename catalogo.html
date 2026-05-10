@@ -404,8 +404,8 @@ function render(){
   document.getElementById('rcount').innerHTML=`<strong>${cars.length}</strong> vehículos`;
   if(!cars.length){document.getElementById('grid').innerHTML=`<div class="empty"><p>Sin resultados para ese filtro.</p></div>`;return;}
   document.getElementById('grid').innerHTML=cars.map(c=>`
-    <div class="car-card" onclick="openModal(${c.id})">
-      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy" decoding="async" width="400" height="200">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}</div>
+    <div class="car-card" onclick="openModal('${c.id}')">
+      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" width="400" height="200">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}</div>
       <div class="card-body">
         <div class="card-cat">${c.cat}</div>
         <div class="card-marca">${c.marca}</div>
@@ -424,7 +424,7 @@ init();
 let _mFotos=[], _mIdx=0;
 
 function openModal(id){
-  const c = CARS_DB.find(x=>x.id===id);
+  const c = CARS_DB.find(x=>String(x.id)===String(id));
   if(!c) return;
   // Galería
   _mFotos = c.fotos||[];
@@ -475,7 +475,7 @@ function renderGallery(){
     prev.style.display=next.style.display='flex';
     counter.style.display='';
     counter.textContent=`${_mIdx+1} / ${_mFotos.length}`;
-    thumbs.innerHTML=_mFotos.map((f,i)=>`<img class="gthumb${i===_mIdx?' active':''}" src="${f}" onclick="galleryGo(${i})" alt="">`).join('');
+    thumbs.innerHTML=_mFotos.map((f,i)=>`<img class="gthumb${i===_mIdx?' active':''}" src="${f}" onclick="galleryGo(${i})" alt="" loading="lazy">`).join('');
   } else {
     prev.style.display=next.style.display=counter.style.display='none';
     thumbs.innerHTML='';

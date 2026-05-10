@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legarreta Automotores — Tandil</title>
+<meta name="description" content="Legarreta Automotores — Pick-ups de alto impacto en Tandil. Hilux, Ranger, F-150, Amarok V6 y más. Financiación en dólares, 12 cuotas.">
+<meta property="og:title" content="Legarreta Automotores — Tandil">
+<meta property="og:description" content="Pick-ups de alto impacto. Seleccionados, financiados en dólares.">
+<meta property="og:image" content="https://legarreta.com.ar/images/hero-gemini.jpg">
+<meta property="og:url" content="https://legarreta.com.ar">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.rel='stylesheet'">
@@ -124,6 +132,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
 .foot-links{display:flex;gap:1.5rem;}
 .foot-links a{color:var(--gray2);font-size:.72rem;text-decoration:none;letter-spacing:.08em;transition:color .2s;}
 .foot-links a:hover{color:var(--white);}
+#footSocial a{color:var(--gray2);transition:color .2s;}#footSocial a:hover{color:var(--white);}
 @media(max-width:1024px){.featured-grid{grid-template-columns:repeat(2,1fr);}.financia{grid-template-columns:1fr;gap:3rem;}.contact-grid{grid-template-columns:1fr;gap:3rem;}.stats{grid-template-columns:repeat(2,1fr);}.stat:nth-child(2){border-right:none;}.cat-cta{flex-direction:column;align-items:flex-start;}}
 @media(max-width:768px){.nav-links,.nav-cta{display:none;}.nav-burger{display:block;}.frow{grid-template-columns:1fr;}.foot{flex-direction:column;text-align:center;}.foot-links{justify-content:center;}.hero{padding:0 6% 4rem;}.hero-sub{font-size:.88rem;max-width:100%;}.hero-btns{flex-direction:column;}.btn-white,.btn-border{text-align:center;}}
 @media(max-width:768px){.hero-img{background-position:30% top!important;}}
@@ -232,11 +241,11 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
     <div>
       <form id="cform">
         <div class="frow">
-          <div class="fgroup"><label class="flabel">Nombre</label><input type="text" class="finput" placeholder="Tu nombre" required></div>
-          <div class="fgroup"><label class="flabel">Teléfono</label><input type="tel" class="finput" placeholder="+54 ..."></div>
+          <div class="fgroup"><label class="flabel">Nombre</label><input type="text" name="nombre" class="finput" placeholder="Tu nombre" required></div>
+          <div class="fgroup"><label class="flabel">Teléfono</label><input type="tel" name="telefono" class="finput" placeholder="+54 ..."></div>
         </div>
-        <div class="fgroup"><label class="flabel">Email</label><input type="email" class="finput" placeholder="tu@email.com"></div>
-        <div class="fgroup"><label class="flabel">¿Qué auto te interesa?</label><textarea class="ftextarea" placeholder="Contanos qué buscás..."></textarea></div>
+        <div class="fgroup"><label class="flabel">Email</label><input type="email" name="email" class="finput" placeholder="tu@email.com"></div>
+        <div class="fgroup"><label class="flabel">¿Qué auto te interesa?</label><textarea name="interes" class="ftextarea" placeholder="Contanos qué buscás..."></textarea></div>
         <button type="submit" class="fsubmit">Enviar consulta</button>
       </form>
     </div>
@@ -249,7 +258,10 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
       <img src="images/logo-original.png" alt="Legarreta Automotores" style="height:50px;width:auto;filter:brightness(0) invert(1);opacity:.5;">
     </div>
     <p class="foot-copy" id="footCopy"></p>
-    <div class="foot-links"><a href="#inicio">Inicio</a><a href="catalogo.html">Catálogo</a><a href="#contacto">Contacto</a></div>
+    <div style="display:flex;align-items:center;gap:1.5rem;">
+      <div id="footSocial" style="display:flex;gap:.9rem;align-items:center;"></div>
+      <div class="foot-links"><a href="#inicio">Inicio</a><a href="catalogo.html">Catálogo</a><a href="#contacto">Contacto</a></div>
+    </div>
   </div>
 </footer>
 
@@ -313,7 +325,15 @@ const CONFIG = {
   // ── Año del copyright en el footer ────────────────────
   year: '2025',
 
+  // ── Redes sociales (dejá vacío '' para ocultar) ────────
+  instagram: '', // ej: 'https://instagram.com/legarretaautos'
+  facebook:  '', // ej: 'https://facebook.com/legarretaautos'
+
 };
+
+// ── Supabase (para auto-actualizar el contador de stock) ─
+const _SUPA = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
+const _ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
 /* ════════════════════════════════════════════════════════ */
 
 // Helper: URL de WhatsApp con mensaje opcional
@@ -321,8 +341,10 @@ function wa(msg) {
   return 'https://wa.me/' + CONFIG.whatsapp + (msg ? '?text=' + encodeURIComponent(msg) : '');
 }
 
-// Ícono flecha inline
-const ARR = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+// Íconos
+const ARR     = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+const _igIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/></svg>';
+const _fbIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>';
 
 // ── Aplicar CONFIG al DOM ──────────────────────────────────────────────────
 
@@ -340,7 +362,8 @@ document.getElementById('statsGrid').innerHTML = CONFIG.stats.map(function(s) {
 
 // Vehículos destacados
 document.getElementById('featGrid').innerHTML = CONFIG.featured.map(function(c) {
-  return '<div class="feat-card">' +
+  var cardWa = wa('Hola Legarreta, me interesa el ' + c.marca + ' ' + c.modelo + '. ¿Tienen disponibilidad?');
+  return '<div class="feat-card" onclick="window.open(\'' + cardWa + '\',\'_blank\')">' +
     '<div class="feat-img-wrap">' +
       '<img src="' + c.img + '" alt="' + c.marca + ' ' + c.modelo + '" loading="lazy" decoding="async" style="object-position:' + c.pos + '">' +
       '<div class="feat-tag">' + c.tipo + '</div>' +
@@ -386,6 +409,30 @@ document.getElementById('contactHours').textContent   = CONFIG.hours;
 document.getElementById('footCopy').textContent =
   '© ' + CONFIG.year + ' Legarreta Automotores · Tandil';
 
+// Redes sociales en footer
+(function() {
+  var social = '';
+  if(CONFIG.instagram) social += '<a href="' + CONFIG.instagram + '" target="_blank" aria-label="Instagram">' + _igIcon + '</a>';
+  if(CONFIG.facebook)  social += '<a href="' + CONFIG.facebook  + '" target="_blank" aria-label="Facebook">'  + _fbIcon + '</a>';
+  if(social) document.getElementById('footSocial').innerHTML = social;
+})();
+
+// Auto-actualizar contador de stock desde Supabase
+fetch(_SUPA + '/rest/v1/vehiculos_legarreta?select=id&activo=eq.true', {
+  headers: { 'apikey': _ANON, 'Prefer': 'count=exact', 'Range': '0-0' }
+}).then(function(r) {
+  var range = r.headers.get('Content-Range');
+  var total = range && range.split('/')[1];
+  if(total && !isNaN(total)) {
+    var n = parseInt(total);
+    document.getElementById('catCtaSub').textContent =
+      n + ' vehículos disponibles · filtros por marca, categoría y precio';
+    // Actualizar también el stat de stock
+    var statNs = document.querySelectorAll('.stat-n');
+    if(statNs[0]) statNs[0].textContent = n + '+';
+  }
+}).catch(function(){});
+
 // ── Interacciones ──────────────────────────────────────────────────────────
 
 document.getElementById('burger').addEventListener('click', function() {
@@ -400,15 +447,25 @@ window.addEventListener('scroll', function() {
 
 document.getElementById('cform').addEventListener('submit', function(e) {
   e.preventDefault();
-  var b = e.target.querySelector('.fsubmit');
-  b.textContent = '✓ ENVIADO';
-  b.style.background = '#10b981';
-  b.style.color = '#fff';
+  var form = e.target;
+  var nombre  = form.querySelector('[name="nombre"]').value.trim();
+  var telefono = form.querySelector('[name="telefono"]').value.trim();
+  var email   = form.querySelector('[name="email"]').value.trim();
+  var interes = form.querySelector('[name="interes"]').value.trim();
+  var msg = 'Hola Legarreta, soy ' + (nombre || 'un interesado') + '.';
+  if(interes) msg += ' ' + interes;
+  if(telefono) msg += ' Mi teléfono: ' + telefono + '.';
+  if(email)    msg += ' Mi email: ' + email + '.';
+  window.open(wa(msg), '_blank');
+  var b = form.querySelector('.fsubmit');
+  b.textContent = '✓ REDIRIGIENDO A WHATSAPP';
+  b.style.background = '#25d366';
+  b.style.color = '#000';
   setTimeout(function() {
     b.textContent = 'ENVIAR CONSULTA';
     b.style.background = '';
     b.style.color = '';
-    e.target.reset();
+    form.reset();
   }, 3000);
 });
 </script>

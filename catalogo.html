@@ -54,8 +54,47 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .car-card:hover{background:#131313;}
 .car-card:hover::before{transform:scaleX(1);}
 .card-img{width:100%;height:200px;overflow:hidden;}
-.card-img img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%) contrast(1.05);transition:transform .6s;}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s;}
 .car-card:hover .card-img img{transform:scale(1.04);}
+.car-card{cursor:pointer;}
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+@media(min-width:700px){.modal-overlay{align-items:center;}}
+.modal{background:var(--card);width:100%;max-width:900px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;position:relative;}
+@media(min-width:700px){.modal{flex-direction:row;max-height:85vh;}}
+.modal-close{position:absolute;top:1rem;right:1rem;z-index:10;background:rgba(0,0,0,.7);border:none;color:var(--white);width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+/* Galería */
+.modal-gallery{position:relative;background:#000;flex-shrink:0;}
+@media(max-width:699px){.modal-gallery{height:260px;}}
+@media(min-width:700px){.modal-gallery{width:54%;height:auto;min-height:400px;}}
+.modal-main-img{width:100%;height:100%;object-fit:cover;display:block;}
+.modal-no-img{width:100%;height:100%;min-height:260px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:.8rem;}
+.gallery-arr{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:var(--white);width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;transition:background .2s;}
+.gallery-arr:hover{background:rgba(0,0,0,.9);}
+.gallery-arr.prev{left:.7rem;}
+.gallery-arr.next{right:.7rem;}
+.gallery-counter{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);font-size:.62rem;letter-spacing:.1em;background:rgba(0,0,0,.6);color:rgba(255,255,255,.7);padding:.2rem .7rem;border-radius:20px;}
+.gallery-thumbs{position:absolute;bottom:0;left:0;right:0;display:flex;gap:3px;padding:3px;background:rgba(0,0,0,.5);overflow-x:auto;}
+.gallery-thumbs::-webkit-scrollbar{height:2px;}
+.gallery-thumbs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);}
+.gthumb{width:52px;height:40px;object-fit:cover;opacity:.5;cursor:pointer;border:2px solid transparent;flex-shrink:0;transition:opacity .2s,border-color .2s;}
+.gthumb.active{opacity:1;border-color:var(--white);}
+/* Info panel */
+.modal-info{padding:2rem 1.8rem;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1.4rem;}
+.modal-badge{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gray);}
+.modal-brand{font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gray);margin-top:.2rem;}
+.modal-model{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1;letter-spacing:.03em;margin-top:.3rem;}
+.modal-specs{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.mspec-label{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);margin-bottom:.2rem;}
+.mspec-val{font-size:.9rem;font-weight:600;}
+.modal-price-block{display:flex;align-items:baseline;gap:.4rem;}
+.modal-price{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1;}
+.modal-curr{font-size:.7rem;color:var(--gray);letter-spacing:.1em;}
+.modal-desc{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7;}
+.modal-cta{display:flex;align-items:center;justify-content:center;gap:.5rem;background:#25d366;color:#fff;text-decoration:none;padding:1rem 1.5rem;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:opacity .2s;margin-top:auto;}
+.modal-cta:hover{opacity:.85;}
+.modal-cta svg{flex-shrink:0;}
 .card-img-placeholder{width:100%;height:100%;background:var(--b2);display:flex;align-items:center;justify-content:center;}
 .card-img-placeholder svg{opacity:.06;}
 .card-body{padding:1.8rem 1.8rem 1.6rem;flex:1;display:flex;flex-direction:column;}
@@ -157,6 +196,35 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
   </div>
 </footer>
 
+<!-- MODAL DETALLE -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-gallery" id="modalGallery">
+      <div class="modal-no-img" id="modalNoImg">Sin fotografías</div>
+      <img id="modalMainImg" class="modal-main-img" src="" alt="" style="display:none;">
+      <button class="gallery-arr prev" id="galleryPrev" onclick="galleryNav(-1)" style="display:none;">‹</button>
+      <button class="gallery-arr next" id="galleryNext" onclick="galleryNav(1)" style="display:none;">›</button>
+      <div class="gallery-counter" id="galleryCounter" style="display:none;"></div>
+      <div class="gallery-thumbs" id="galleryThumbs"></div>
+    </div>
+    <div class="modal-info">
+      <div>
+        <div class="modal-badge" id="mBadge"></div>
+        <div class="modal-brand" id="mBrand"></div>
+        <div class="modal-model" id="mModel"></div>
+      </div>
+      <div class="modal-specs" id="mSpecs"></div>
+      <div class="modal-price-block" id="mPriceBlock"></div>
+      <div class="modal-desc" id="mDesc" style="display:none;"></div>
+      <a class="modal-cta" id="mWA" href="#" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        Consultar por WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
 <a class="wa-float" href="https://wa.me/542494585374" target="_blank">
   <svg width="25" height="25" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
 </a>
@@ -226,14 +294,15 @@ async function init(){
     if (Array.isArray(data) && data.length) {
       CARS_DB = data.map(v => ({
         id: v.id, cat: v.tipo||'Otro', marca: v.marca, modelo: v.modelo,
-        año: v.anio, precio: v.precio, img: v.fotos?.[0]||null,
+        año: v.anio, km: v.km, precio: v.precio,
+        img: v.fotos?.[0]||null, fotos: v.fotos||[],
         descripcion: v.descripcion
       }));
     } else {
-      CARS_DB = CARS; // fallback al array
+      CARS_DB = CARS.map(c=>({...c, fotos: c.img?[c.img]:[]}));
     }
   } catch(e) {
-    CARS_DB = CARS;
+    CARS_DB = CARS.map(c=>({...c, fotos: c.img?[c.img]:[]}));
   }
   const marcas=[...new Set(CARS_DB.map(c=>c.marca))].sort();
   const sel=document.getElementById('fM');
@@ -274,8 +343,8 @@ function render(){
   document.getElementById('rcount').innerHTML=`<strong>${cars.length}</strong> vehículos`;
   if(!cars.length){document.getElementById('grid').innerHTML=`<div class="empty"><p>Sin resultados para ese filtro.</p></div>`;return;}
   document.getElementById('grid').innerHTML=cars.map(c=>`
-    <div class="car-card">
-      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy">`:`<div class="card-img-placeholder" style="display:flex;align-items:center;justify-content:center;height:100%;color:#333;font-size:.75rem;">Sin foto</div>`}</div>
+    <div class="car-card" onclick="openModal(${c.id})">
+      <div class="card-img">${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" loading="lazy">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}</div>
       <div class="card-body">
         <div class="card-cat">${c.cat}</div>
         <div class="card-marca">${c.marca}</div>
@@ -283,12 +352,90 @@ function render(){
         <div class="card-sep"></div>
         <div class="card-foot">
           <div>${c.precio!==null&&c.precio!==undefined?`<span class="card-price"><span class="card-curr">USD</span>${c.precio.toLocaleString('es-AR')}</span>`:`<span class="card-noprice">Consultar precio</span>`}</div>
-          <a class="card-wa" href="https://wa.me/${WA}?text=${encodeURIComponent('Hola Legarreta, vi en el catálogo el '+c.marca+' '+c.modelo+' y quiero más info.')}" target="_blank">Consultar&nbsp;${iArr}</a>
+          <span class="card-wa">Ver detalle&nbsp;${iArr}</span>
         </div>
       </div>
     </div>`).join('');
 }
 init();
+
+/* ── MODAL ── */
+let _mFotos=[], _mIdx=0;
+
+function openModal(id){
+  const c = CARS_DB.find(x=>x.id===id);
+  if(!c) return;
+  // Galería
+  _mFotos = c.fotos||[];
+  _mIdx = 0;
+  renderGallery();
+  // Info
+  document.getElementById('mBadge').textContent = c.cat||'';
+  document.getElementById('mBrand').textContent = c.marca||'';
+  document.getElementById('mModel').textContent = (c.modelo||'') + (c.año?' · '+c.año:'');
+  // Specs
+  const specs = [];
+  if(c.km!=null) specs.push({l:'Kilómetros',v: c.km===0?'0 km':c.km.toLocaleString('es-AR')+' km'});
+  if(c.año)       specs.push({l:'Año',v:c.año});
+  if(c.cat)       specs.push({l:'Categoría',v:c.cat});
+  document.getElementById('mSpecs').innerHTML = specs.map(s=>`<div><div class="mspec-label">${s.l}</div><div class="mspec-val">${s.v}</div></div>`).join('');
+  // Precio
+  const pb = document.getElementById('mPriceBlock');
+  pb.innerHTML = c.precio!=null
+    ? `<span class="modal-curr">USD</span><span class="modal-price">${c.precio.toLocaleString('es-AR')}</span>`
+    : `<span style="color:var(--gray);font-size:.9rem;">Precio a consultar</span>`;
+  // Desc
+  const descEl = document.getElementById('mDesc');
+  if(c.descripcion){descEl.textContent=c.descripcion;descEl.style.display='';}
+  else descEl.style.display='none';
+  // WA
+  const txt = encodeURIComponent(`Hola Legarreta, vi en el catálogo el ${c.marca} ${c.modelo}${c.año?' '+c.año:''} y quiero más información.`);
+  document.getElementById('mWA').href = `https://wa.me/${WA}?text=${txt}`;
+  // Abrir
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function renderGallery(){
+  const main = document.getElementById('modalMainImg');
+  const noImg = document.getElementById('modalNoImg');
+  const prev = document.getElementById('galleryPrev');
+  const next = document.getElementById('galleryNext');
+  const counter = document.getElementById('galleryCounter');
+  const thumbs = document.getElementById('galleryThumbs');
+  if(!_mFotos.length){
+    main.style.display='none'; noImg.style.display='';
+    prev.style.display=next.style.display=counter.style.display='none';
+    thumbs.innerHTML=''; return;
+  }
+  noImg.style.display='none';
+  main.src=_mFotos[_mIdx]; main.style.display='block';
+  if(_mFotos.length>1){
+    prev.style.display=next.style.display='flex';
+    counter.style.display='';
+    counter.textContent=`${_mIdx+1} / ${_mFotos.length}`;
+    thumbs.innerHTML=_mFotos.map((f,i)=>`<img class="gthumb${i===_mIdx?' active':''}" src="${f}" onclick="galleryGo(${i})" alt="">`).join('');
+  } else {
+    prev.style.display=next.style.display=counter.style.display='none';
+    thumbs.innerHTML='';
+  }
+}
+
+function galleryNav(dir){
+  _mIdx=(_mIdx+dir+_mFotos.length)%_mFotos.length;
+  renderGallery();
+}
+function galleryGo(i){_mIdx=i;renderGallery();}
+
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeModal(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModalDirect();
+}
+// Cerrar con Escape
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModalDirect();});
 </script>
 </body>
 </html>

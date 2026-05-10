@@ -6,73 +6,155 @@
 <title>Admin — Legarreta Automotores</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
-:root{--black:#000;--dark:#0a0a0a;--card:#111;--border:#222;--white:#fff;--gray:#888;--green:#22c55e;--red:#ef4444;}
+:root{--black:#000;--dark:#0a0a0a;--card:#111;--card2:#161616;--border:#222;--b2:#2a2a2a;--white:#fff;--gray:#888;--gray2:#555;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--dark);color:var(--white);min-height:100vh;}
-/* LOGIN */
+
+/* ── LOGIN ── */
 #login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
 .login-box{background:var(--card);border:1px solid var(--border);padding:2.5rem;width:100%;max-width:380px;border-radius:12px;}
-.login-logo{font-family:'Georgia',serif;font-size:1.4rem;letter-spacing:.1em;margin-bottom:.3rem;}
+.login-logo{margin-bottom:.3rem;}.login-logo img{height:52px;width:auto;filter:brightness(0) invert(1);}
 .login-sub{color:var(--gray);font-size:.8rem;margin-bottom:2rem;}
-/* ADMIN */
-#admin{display:none;max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem;}
-.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
-.admin-logo{font-size:1rem;letter-spacing:.15em;font-weight:600;}
-.btn-logout{background:none;border:1px solid var(--border);color:var(--gray);padding:.4rem .9rem;font-size:.72rem;cursor:pointer;border-radius:6px;}
-.btn-logout:hover{border-color:var(--white);color:var(--white);}
-/* TABS */
-.tabs{display:flex;gap:1px;background:var(--border);border-radius:8px;overflow:hidden;margin-bottom:2rem;}
-.tab{flex:1;padding:.7rem;text-align:center;font-size:.78rem;font-weight:600;letter-spacing:.06em;cursor:pointer;background:var(--card);color:var(--gray);transition:all .2s;}
-.tab.active{background:var(--white);color:var(--black);}
-/* FORM */
+.inp{width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--white);padding:.8rem 1rem;font-size:.95rem;border-radius:8px;font-family:inherit;transition:border-color .2s;margin-bottom:1rem;}
+.inp:focus{outline:none;border-color:rgba(255,255,255,.4);}
+.btn-primary{width:100%;background:var(--white);color:var(--black);border:none;padding:.85rem;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:8px;transition:opacity .2s;}
+.btn-primary:hover{opacity:.85;}
+.login-err{color:var(--red);font-size:.78rem;margin-top:.7rem;display:none;}
+
+/* ── SHELL ── */
+#admin{display:none;min-height:100vh;}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between;}
+.topbar-logo img{height:32px;width:auto;filter:brightness(0) invert(1);}
+.topbar-right{display:flex;align-items:center;gap:.8rem;}
+.badge-count{background:var(--border);color:var(--gray);font-size:.7rem;padding:.2rem .6rem;border-radius:20px;}
+.btn-sm{background:none;border:1px solid var(--border);color:var(--gray);padding:.4rem .85rem;font-size:.72rem;cursor:pointer;border-radius:6px;transition:all .2s;white-space:nowrap;}
+.btn-sm:hover{border-color:var(--white);color:var(--white);}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:900px;margin:0 auto;padding:1.5rem 1rem 5rem;}
+
+/* ── SECTION TABS ── */
+.sec-tabs{display:flex;gap:1px;background:var(--border);border-radius:8px;overflow:hidden;margin-bottom:1.8rem;}
+.sec-tab{flex:1;padding:.65rem;text-align:center;font-size:.75rem;font-weight:600;letter-spacing:.08em;cursor:pointer;background:var(--card);color:var(--gray);transition:all .2s;}
+.sec-tab.active{background:var(--white);color:var(--black);}
 .section{display:none;}
 .section.active{display:block;}
-.form-group{margin-bottom:1.2rem;}
-label{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:.5rem;}
-input,select,textarea{width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--white);padding:.75rem 1rem;font-size:.9rem;border-radius:8px;font-family:inherit;transition:border-color .2s;}
-input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(255,255,255,.4);}
-select option{background:#1a1a1a;}
-textarea{min-height:80px;resize:vertical;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-/* FOTO UPLOAD */
-.upload-area{border:2px dashed var(--border);border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
-.upload-area:hover,.upload-area.drag{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.03);}
+
+/* ── FILTERS BAR ── */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem;align-items:center;}
+.f-inp,.f-sel{background:var(--card2);border:1px solid var(--border);color:var(--white);padding:.55rem .9rem;font-size:.78rem;border-radius:7px;font-family:inherit;transition:border-color .2s;}
+.f-inp{flex:1;min-width:160px;}
+.f-sel{min-width:130px;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:1.6rem;}
+.f-inp:focus,.f-sel:focus{outline:none;border-color:rgba(255,255,255,.35);}
+.f-sel option{background:#1a1a1a;}
+.f-count{font-size:.72rem;color:var(--gray);padding:.5rem 0;margin-bottom:.5rem;}
+.f-count strong{color:var(--white);}
+
+/* ── VEHICLE LIST ── */
+.v-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:10px;overflow:hidden;}
+.v-item{background:var(--card);display:grid;grid-template-columns:60px 1fr auto;gap:.8rem;align-items:center;padding:.9rem 1rem;cursor:pointer;transition:background .15s;}
+.v-item:hover{background:var(--card2);}
+.v-item.expanded{background:var(--card2);}
+.v-thumb{width:60px;height:46px;border-radius:5px;overflow:hidden;background:var(--border);flex-shrink:0;}
+.v-thumb img{width:100%;height:100%;object-fit:cover;}
+.v-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--gray2);font-size:.6rem;}
+.v-info{min-width:0;}
+.v-marca{font-size:.6rem;color:var(--gray);letter-spacing:.18em;text-transform:uppercase;}
+.v-modelo{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v-meta{font-size:.72rem;color:var(--gray);margin-top:.15rem;}
+.v-actions{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+.pill{font-size:.62rem;font-weight:600;letter-spacing:.08em;padding:.25rem .6rem;border-radius:20px;text-transform:uppercase;}
+.pill-on{background:rgba(34,197,94,.12);color:var(--green);}
+.pill-off{background:rgba(239,68,68,.1);color:var(--red);}
+.v-chevron{color:var(--gray2);font-size:.8rem;transition:transform .2s;}
+.v-item.expanded .v-chevron{transform:rotate(90deg);}
+
+/* ── EXPAND PANEL ── */
+.v-panel{display:none;background:#0d0d0d;border-top:1px solid var(--border);padding:1.2rem 1rem 1.4rem;}
+.v-panel.open{display:block;}
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.pg3{grid-template-columns:1fr 1fr 1fr;}
+.panel-label{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);display:block;margin-bottom:.35rem;}
+.panel-inp,.panel-sel,.panel-ta{width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--white);padding:.65rem .85rem;font-size:.85rem;border-radius:7px;font-family:inherit;transition:border-color .2s;}
+.panel-inp:focus,.panel-sel:focus,.panel-ta:focus{outline:none;border-color:rgba(255,255,255,.4);}
+.panel-sel{-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:1.6rem;}
+.panel-sel option{background:#1a1a1a;}
+.panel-ta{min-height:70px;resize:vertical;}
+.full-col{grid-column:1/-1;}
+.panel-sep{grid-column:1/-1;height:1px;background:var(--border);margin:.3rem 0;}
+
+/* ── FOTOS PANEL ── */
+.fotos-section{margin-top:1rem;}
+.fotos-title{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:.7rem;}
+.fotos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:.7rem;}
+.foto-item{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:var(--border);}
+.foto-item img{width:100%;height:100%;object-fit:cover;}
+.foto-del{position:absolute;top:.3rem;right:.3rem;background:rgba(0,0,0,.75);border:none;color:white;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.foto-del:hover{background:var(--red);}
+.foto-add{aspect-ratio:4/3;border:1.5px dashed var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--gray2);font-size:.7rem;gap:.3rem;transition:all .2s;position:relative;}
+.foto-add:hover{border-color:rgba(255,255,255,.3);color:var(--gray);}
+.foto-add input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.foto-add-icon{font-size:1.3rem;}
+.upload-prog{height:2px;background:var(--border);border-radius:1px;margin-top:.5rem;overflow:hidden;}
+.upload-fill{height:100%;background:var(--green);transition:width .3s;width:0;}
+
+/* ── PANEL ACTIONS ── */
+.panel-btns{display:flex;gap:.6rem;margin-top:1.2rem;flex-wrap:wrap;}
+.btn-save{background:var(--white);color:var(--black);border:none;padding:.65rem 1.4rem;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:opacity .2s;}
+.btn-save:hover{opacity:.85;}
+.btn-save:disabled{opacity:.4;cursor:default;}
+.btn-toggle{border:1px solid;padding:.65rem 1.2rem;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:7px;background:none;transition:all .2s;}
+.btn-toggle.deactivate{border-color:rgba(239,68,68,.4);color:var(--red);}
+.btn-toggle.deactivate:hover{background:rgba(239,68,68,.1);}
+.btn-toggle.activate{border-color:rgba(34,197,94,.4);color:var(--green);}
+.btn-toggle.activate:hover{background:rgba(34,197,94,.1);}
+.btn-del{border:1px solid var(--border);color:var(--gray2);padding:.65rem 1rem;font-size:.75rem;cursor:pointer;border-radius:7px;background:none;transition:all .2s;margin-left:auto;}
+.btn-del:hover{border-color:var(--red);color:var(--red);}
+.panel-msg{font-size:.75rem;padding:.5rem .8rem;border-radius:6px;margin-top:.6rem;display:none;}
+.panel-msg.ok{background:rgba(34,197,94,.1);color:var(--green);}
+.panel-msg.err{background:rgba(239,68,68,.1);color:var(--red);}
+
+/* ── ADD VEHICLE FORM ── */
+.form-group{margin-bottom:1.1rem;}
+.form-group label{display:block;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:.4rem;}
+.form-group .inp,.form-group select,.form-group textarea{width:100%;background:#1a1a1a;border:1px solid var(--border);color:var(--white);padding:.7rem .9rem;font-size:.9rem;border-radius:8px;font-family:inherit;transition:border-color .2s;}
+.form-group .inp:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:rgba(255,255,255,.4);}
+.form-group select option{background:#1a1a1a;}
+.form-group textarea{min-height:75px;resize:vertical;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.upload-area{border:2px dashed var(--border);border-radius:10px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;position:relative;margin-top:.5rem;}
+.upload-area:hover,.upload-area.drag{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.02);}
 .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
-.upload-icon{font-size:2rem;margin-bottom:.5rem;}
+.upload-icon{font-size:2rem;margin-bottom:.4rem;}
 .upload-text{font-size:.82rem;color:var(--gray);}
-.upload-hint{font-size:.72rem;color:#555;margin-top:.3rem;}
-.previews{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem;}
+.upload-hint{font-size:.7rem;color:var(--gray2);margin-top:.25rem;}
+.previews{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.8rem;}
 .preview-item{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:#1a1a1a;}
 .preview-item img{width:100%;height:100%;object-fit:cover;}
-.preview-item .remove{position:absolute;top:.3rem;right:.3rem;background:rgba(0,0,0,.7);border:none;color:white;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;}
+.preview-item .remove{position:absolute;top:.3rem;right:.3rem;background:rgba(0,0,0,.7);border:none;color:white;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;}
 .progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:.5rem;overflow:hidden;}
 .progress-fill{height:100%;background:var(--green);transition:width .3s;width:0;}
-/* BOTÓN SUBMIT */
-.btn-submit{width:100%;background:var(--white);color:var(--black);border:none;padding:1rem;font-size:.82rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:8px;margin-top:1.5rem;transition:all .2s;}
-.btn-submit:hover{background:#e8e8e8;}
-.btn-submit:disabled{opacity:.4;cursor:not-allowed;}
-/* LISTA */
-.vehicle-list{display:flex;flex-direction:column;gap:.8rem;}
-.v-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;gap:1rem;align-items:center;}
-.v-thumb{width:72px;height:54px;border-radius:6px;object-fit:cover;background:#1a1a1a;flex-shrink:0;}
-.v-thumb-empty{width:72px;height:54px;border-radius:6px;background:#1a1a1a;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#444;font-size:.7rem;}
-.v-info{flex:1;min-width:0;}
-.v-marca{font-size:.65rem;color:var(--gray);letter-spacing:.12em;text-transform:uppercase;}
-.v-modelo{font-size:.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.v-meta{font-size:.72rem;color:var(--gray);margin-top:.2rem;}
-.v-actions{display:flex;gap:.5rem;flex-shrink:0;}
-.btn-del{background:none;border:1px solid #333;color:var(--gray);padding:.35rem .7rem;font-size:.7rem;border-radius:6px;cursor:pointer;transition:all .2s;}
-.btn-del:hover{border-color:var(--red);color:var(--red);}
-.btn-toggle{background:none;border:1px solid #333;color:var(--gray);padding:.35rem .7rem;font-size:.7rem;border-radius:6px;cursor:pointer;transition:all .2s;}
-.btn-toggle.activo{border-color:#333;color:var(--green);}
-/* TOAST */
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--border);color:var(--white);padding:.8rem 1.5rem;border-radius:8px;font-size:.82rem;transition:transform .3s;z-index:999;white-space:nowrap;}
-.toast.show{transform:translateX(-50%) translateY(0);}
-.toast.ok{border-color:var(--green);color:var(--green);}
-.toast.err{border-color:var(--red);color:var(--red);}
-/* UTILS */
-.label-input{display:flex;align-items:center;gap:.5rem;}
-.badge{font-size:.6rem;background:#333;color:#aaa;padding:.15rem .4rem;border-radius:4px;letter-spacing:.06em;}
-.empty-state{text-align:center;padding:3rem 1rem;color:var(--gray);}
+.form-submit{width:100%;background:var(--white);color:var(--black);border:none;padding:.95rem;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:8px;margin-top:1.5rem;transition:opacity .2s;}
+.form-submit:hover{opacity:.85;}
+.form-submit:disabled{opacity:.4;cursor:default;}
+.form-msg{font-size:.78rem;padding:.6rem .9rem;border-radius:7px;margin-top:.8rem;display:none;}
+.form-msg.ok{background:rgba(34,197,94,.1);color:var(--green);}
+.form-msg.err{background:rgba(239,68,68,.1);color:var(--red);}
+
+/* ── EMPTY / LOADING ── */
+.empty{text-align:center;padding:4rem 2rem;color:var(--gray);}
+.spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--white);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:540px){
+  .panel-grid{grid-template-columns:1fr;}
+  .pg3{grid-template-columns:1fr 1fr;}
+  .fotos-grid{grid-template-columns:repeat(3,1fr);}
+  .form-row-2,.form-row-3{grid-template-columns:1fr;}
+  .panel-btns{flex-direction:column;}
+  .btn-del{margin-left:0;}
+}
 </style>
 </head>
 <body>
@@ -80,280 +162,520 @@ textarea{min-height:80px;resize:vertical;}
 <!-- LOGIN -->
 <div id="login">
   <div class="login-box">
-    <div class="login-logo">LEGARRETA</div>
+    <div class="login-logo"><img src="images/logo-original.png" alt="Legarreta Automotores"></div>
     <div class="login-sub">Panel de administración</div>
-    <div class="form-group">
-      <label>Contraseña</label>
-      <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <button class="btn-submit" onclick="doLogin()" style="margin-top:0">Ingresar</button>
-    <div id="login-err" style="color:var(--red);font-size:.78rem;margin-top:.8rem;display:none;">Contraseña incorrecta</div>
+    <input class="inp" type="password" id="pw" placeholder="Contraseña" autocomplete="current-password">
+    <button class="btn-primary" onclick="doLogin()">Entrar</button>
+    <div class="login-err" id="loginErr">Contraseña incorrecta</div>
   </div>
 </div>
 
 <!-- ADMIN -->
 <div id="admin">
-  <div class="admin-header">
-    <div class="admin-logo">LEGARRETA · ADMIN</div>
-    <button class="btn-logout" onclick="doLogout()">Salir</button>
+  <div class="topbar">
+    <span class="topbar-logo"><img src="images/logo-original.png" alt="Legarreta Automotores"></span>
+    <div class="topbar-right">
+      <span class="badge-count" id="badgeTotal">— vehículos</span>
+      <a href="catalogo.html" target="_blank" class="btn-sm">Ver catálogo ↗</a>
+      <button class="btn-sm" onclick="logout()">Salir</button>
+    </div>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="setTab('nuevo')">+ Nuevo vehículo</div>
-    <div class="tab" onclick="setTab('lista')">Mis vehículos</div>
-  </div>
+  <div class="main">
+    <div class="sec-tabs">
+      <div class="sec-tab active" onclick="switchTab('list')">Mis vehículos</div>
+      <div class="sec-tab" onclick="switchTab('add')">+ Agregar</div>
+    </div>
 
-  <!-- NUEVO -->
-  <div class="section active" id="sec-nuevo">
-    <form id="vform" onsubmit="submitVehiculo(event)">
-      <div class="form-row">
+    <!-- ── LISTA ── -->
+    <div class="section active" id="sec-list">
+      <div class="filters">
+        <input class="f-inp" type="text" id="fQ" placeholder="🔍  Buscar marca o modelo…" oninput="renderList()">
+        <select class="f-sel" id="fT" onchange="renderList()">
+          <option value="">Todos los tipos</option>
+          <option>SUV</option>
+          <option>Pick Up</option>
+          <option>Auto</option>
+        </select>
+        <select class="f-sel" id="fA" onchange="renderList()">
+          <option value="">Disponibilidad</option>
+          <option value="true">Disponibles</option>
+          <option value="false">Inactivos</option>
+        </select>
+      </div>
+      <div class="f-count" id="fCount"></div>
+      <div id="vList"><div class="empty"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- ── AGREGAR ── -->
+    <div class="section" id="sec-add">
+      <div class="form-row-2">
         <div class="form-group">
           <label>Marca</label>
-          <input type="text" id="f-marca" placeholder="Ford" required>
+          <input class="inp" type="text" id="nMarca" placeholder="FORD" autocomplete="off">
         </div>
         <div class="form-group">
           <label>Modelo</label>
-          <input type="text" id="f-modelo" placeholder="Ranger Raptor" required>
+          <input class="inp" type="text" id="nModelo" placeholder="RANGER LIMITED 2.0 4X4 AT" autocomplete="off">
         </div>
       </div>
-      <div class="form-row">
+      <div class="form-row-3">
         <div class="form-group">
           <label>Año</label>
-          <input type="number" id="f-anio" placeholder="2024" min="1990" max="2030">
+          <input class="inp" type="number" id="nAnio" placeholder="2024" min="1980" max="2030">
         </div>
         <div class="form-group">
           <label>Tipo</label>
-          <select id="f-tipo">
-            <option value="Pick Up">Pick Up</option>
+          <select id="nTipo">
             <option value="SUV">SUV</option>
-            <option value="Sport">Sport</option>
-            <option value="Sedan">Sedan</option>
+            <option value="Pick Up">Pick Up</option>
+            <option value="Auto">Auto</option>
             <option value="Moto">Moto</option>
             <option value="Otro">Otro</option>
           </select>
         </div>
+        <div class="form-group">
+          <label>Precio USD</label>
+          <input class="inp" type="number" id="nPrecio" placeholder="25000" min="0">
+        </div>
       </div>
       <div class="form-group">
-        <label>Precio USD <span class="badge">opcional</span></label>
-        <input type="number" id="f-precio" placeholder="35000">
+        <label>Descripción (opcional)</label>
+        <textarea id="nDesc" placeholder="Detalles adicionales del vehículo…"></textarea>
       </div>
-      <div class="form-group">
-        <label>Descripción <span class="badge">opcional</span></label>
-        <textarea id="f-desc" placeholder="4x4, automático, full equipo..."></textarea>
-      </div>
-
       <div class="form-group">
         <label>Fotos</label>
-        <div class="upload-area" id="drop-zone">
-          <input type="file" id="foto-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+        <div class="upload-area" id="dropzone">
+          <input type="file" id="fileInput" accept="image/*" multiple>
           <div class="upload-icon">📷</div>
-          <div class="upload-text">Tocá para agregar fotos</div>
-          <div class="upload-hint">JPG, PNG, HEIC · hasta 10MB cada una</div>
+          <div class="upload-text">Tocá para elegir fotos o arrastrá acá</div>
+          <div class="upload-hint">JPG, PNG, HEIC — Hasta 10 fotos</div>
         </div>
-        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
         <div class="previews" id="previews"></div>
+        <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
       </div>
-
-      <button type="submit" class="btn-submit" id="btn-guardar">Guardar vehículo</button>
-    </form>
-  </div>
-
-  <!-- LISTA -->
-  <div class="section" id="sec-lista">
-    <div class="vehicle-list" id="vlist">
-      <div class="empty-state">Cargando...</div>
+      <button class="form-submit" id="btnAdd" onclick="addVehicle()">Guardar vehículo</button>
+      <div class="form-msg" id="addMsg"></div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-const SUPA = 'https://pgnmpxqljxrpnvexcygh.supabase.co';
-const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
-const SERVICE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQ0NjEwMSwiZXhwIjoyMDkyMDIyMTAxfQ.4zr91CpOYGIofIRmEI-bva_Aq_DCBXyhSNfy-yIGbJ0';
-const BUCKET = 'legarreta-fotos';
-const PWD = 'legarreta2024';
+const SUPA='https://pgnmpxqljxrpnvexcygh.supabase.co';
+const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
+const SERVICE='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQ0NjEwMSwiZXhwIjoyMDkyMDIyMTAxfQ.4zr91CpOYGIofIRmEI-bva_Aq_DCBXyhSNfy-yIGbJ0';
+const BUCKET='legarreta-fotos';
+const PASS='legarreta2024';
 
-let pendingFiles = [];
+let DB=[];
+let pendingFiles=[];
+let expandedId=null;
 
-// AUTH
-function doLogin() {
-  const v = document.getElementById('pwd').value;
-  if (v === PWD) {
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('admin').style.display = 'block';
-    sessionStorage.setItem('la_auth', '1');
-    loadVehiculos();
+// ── AUTH ──────────────────────────────────────────────────────────
+function doLogin(){
+  const v=document.getElementById('pw').value;
+  if(v===PASS){
+    sessionStorage.setItem('la_auth','1');
+    document.getElementById('login').style.display='none';
+    document.getElementById('admin').style.display='block';
+    loadVehicles();
   } else {
-    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('loginErr').style.display='block';
   }
 }
-function doLogout() {
-  sessionStorage.removeItem('la_auth');
-  location.reload();
-}
-document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-if (sessionStorage.getItem('la_auth')) {
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('admin').style.display = 'block';
-  loadVehiculos();
+function logout(){sessionStorage.removeItem('la_auth');location.reload();}
+document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+if(sessionStorage.getItem('la_auth')==='1'){
+  document.getElementById('login').style.display='none';
+  document.getElementById('admin').style.display='block';
+  loadVehicles();
 }
 
-// TABS
-function setTab(t) {
-  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', (t==='nuevo'&&i===0)||(t==='lista'&&i===1)));
-  document.getElementById('sec-nuevo').classList.toggle('active', t==='nuevo');
-  document.getElementById('sec-lista').classList.toggle('active', t==='lista');
-  if (t==='lista') loadVehiculos();
+// ── TABS ──────────────────────────────────────────────────────────
+function switchTab(t){
+  document.querySelectorAll('.sec-tab').forEach((el,i)=>{
+    el.classList.toggle('active',['list','add'][i]===t);
+  });
+  document.getElementById('sec-list').classList.toggle('active',t==='list');
+  document.getElementById('sec-add').classList.toggle('active',t==='add');
 }
 
-// FOTOS
-function handleFiles(files) {
-  Array.from(files).forEach(f => {
-    if (f.size > 10*1024*1024) { toast('Foto muy grande: '+f.name, 'err'); return; }
-    pendingFiles.push(f);
-    const reader = new FileReader();
-    reader.onload = e => addPreview(e.target.result, pendingFiles.length-1);
-    reader.readAsDataURL(f);
+// ── DATA ──────────────────────────────────────────────────────────
+async function loadVehicles(){
+  const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&order=created_at.desc`,{
+    headers:{'apikey':ANON,'Authorization':`Bearer ${SERVICE}`}
+  });
+  DB=await res.json();
+  document.getElementById('badgeTotal').textContent=`${DB.length} vehículos`;
+  renderList();
+}
+
+// ── LIST RENDER ───────────────────────────────────────────────────
+function getFiltered(){
+  const q=document.getElementById('fQ').value.toLowerCase();
+  const t=document.getElementById('fT').value;
+  const a=document.getElementById('fA').value;
+  return DB.filter(v=>{
+    if(q&&!`${v.marca} ${v.modelo}`.toLowerCase().includes(q))return false;
+    if(t&&v.tipo!==t)return false;
+    if(a!==''&&String(v.activo)!==a)return false;
+    return true;
   });
 }
-function addPreview(src, idx) {
-  const d = document.createElement('div');
-  d.className = 'preview-item';
-  d.dataset.idx = idx;
-  d.innerHTML = `<img src="${src}"><button class="remove" onclick="removePreview(${idx})">✕</button>`;
-  document.getElementById('previews').appendChild(d);
-}
-function removePreview(idx) {
-  pendingFiles[idx] = null;
-  document.querySelector(`.preview-item[data-idx="${idx}"]`)?.remove();
-}
-const dz = document.getElementById('drop-zone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
-dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
-dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 
-// UPLOAD FOTO
-async function uploadFoto(file, vehiculoId, i) {
-  const ext = file.name.split('.').pop().toLowerCase().replace('heic','jpg');
-  const path = `${vehiculoId}/${Date.now()}_${i}.${ext}`;
-  const res = await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': file.type || 'image/jpeg' },
-    body: file
-  });
-  if (!res.ok) throw new Error('Error subiendo foto');
-  return `${SUPA}/storage/v1/object/public/${BUCKET}/${path}`;
-}
-
-// SUBMIT
-async function submitVehiculo(e) {
-  e.preventDefault();
-  const btn = document.getElementById('btn-guardar');
-  btn.disabled = true; btn.textContent = 'Guardando...';
-
-  try {
-    // 1. Crear vehículo en Supabase
-    const body = {
-      marca: document.getElementById('f-marca').value.trim().toUpperCase(),
-      modelo: document.getElementById('f-modelo').value.trim().toUpperCase(),
-      anio: parseInt(document.getElementById('f-anio').value) || null,
-      tipo: document.getElementById('f-tipo').value,
-      precio: parseInt(document.getElementById('f-precio').value) || null,
-      descripcion: document.getElementById('f-desc').value.trim() || null,
-      fotos: [],
-      activo: true
-    };
-    const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta`, {
-      method: 'POST',
-      headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-      body: JSON.stringify(body)
+function renderList(){
+  const list=getFiltered();
+  const el=document.getElementById('fCount');
+  el.innerHTML=`<strong>${list.length}</strong> de ${DB.length} vehículos`;
+  const wrap=document.getElementById('vList');
+  if(!list.length){wrap.innerHTML='<div class="empty">Sin resultados</div>';return;}
+  wrap.innerHTML=`<div class="v-list">${list.map(v=>itemHTML(v)).join('')}</div>`;
+  // Restore expanded
+  if(expandedId){
+    const item=wrap.querySelector(`[data-id="${expandedId}"]`);
+    if(item)openPanel(item,expandedId,false);
+  }
+  // Attach click handlers
+  wrap.querySelectorAll('.v-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const id=el.dataset.id;
+      if(expandedId===id){closePanel();return;}
+      closePanel();
+      openPanel(el,id,true);
     });
-    const [vehiculo] = await res.json();
-    const vid = vehiculo.id;
+  });
+}
 
-    // 2. Subir fotos
-    const files = pendingFiles.filter(Boolean);
-    const urls = [];
-    const prog = document.getElementById('progress');
-    for (let i = 0; i < files.length; i++) {
-      prog.style.width = `${((i+1)/files.length)*100}%`;
-      const url = await uploadFoto(files[i], vid, i);
-      urls.push(url);
+function itemHTML(v){
+  const thumb=v.fotos&&v.fotos.length
+    ?`<img src="${v.fotos[0]}" alt="" loading="lazy">`
+    :`<div class="v-thumb-ph">Sin foto</div>`;
+  const on=v.activo;
+  const precio=v.precio!=null?`USD ${Number(v.precio).toLocaleString('es-AR')}`:'Sin precio';
+  return `<div class="v-item" data-id="${v.id}">
+    <div class="v-thumb">${thumb}</div>
+    <div class="v-info">
+      <div class="v-marca">${v.marca}</div>
+      <div class="v-modelo">${v.modelo} ${v.anio||''}</div>
+      <div class="v-meta">${v.tipo||''} · ${precio}</div>
+    </div>
+    <div class="v-actions">
+      <span class="pill ${on?'pill-on':'pill-off'}">${on?'Activo':'Inactivo'}</span>
+      <span class="v-chevron">›</span>
+    </div>
+  </div>
+  <div class="v-panel" id="panel-${v.id}"></div>`;
+}
+
+function openPanel(itemEl,id,animate){
+  itemEl.classList.add('expanded');
+  expandedId=id;
+  const v=DB.find(x=>x.id==id);
+  const panel=document.getElementById(`panel-${id}`);
+  panel.innerHTML=panelHTML(v);
+  panel.classList.add('open');
+  // Attach foto upload
+  panel.querySelector('.foto-add input')?.addEventListener('change',e=>uploadFotos(id,e.target.files));
+}
+
+function closePanel(){
+  if(!expandedId)return;
+  const panel=document.getElementById(`panel-${expandedId}`);
+  if(panel){panel.classList.remove('open');panel.innerHTML='';}
+  document.querySelector('.v-item.expanded')?.classList.remove('expanded');
+  expandedId=null;
+}
+
+function panelHTML(v){
+  const fotos=(v.fotos||[]).map((url,i)=>`
+    <div class="foto-item">
+      <img src="${url}" alt="">
+      <button class="foto-del" onclick="deleteFoto('${v.id}',${i},event)">✕</button>
+    </div>`).join('');
+  const precio=v.precio!=null?v.precio:'';
+  return `
+  <div class="panel-grid pg3">
+    <div><label class="panel-label">Marca</label><input class="panel-inp" data-f="marca" value="${esc(v.marca||'')}"></div>
+    <div style="grid-column:span 2"><label class="panel-label">Modelo</label><input class="panel-inp" data-f="modelo" value="${esc(v.modelo||'')}"></div>
+    <div><label class="panel-label">Año</label><input class="panel-inp" type="number" data-f="anio" value="${v.anio||''}"></div>
+    <div><label class="panel-label">Tipo</label>
+      <select class="panel-sel" data-f="tipo">
+        ${['SUV','Pick Up','Auto','Moto','Otro'].map(t=>`<option${v.tipo===t?' selected':''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div><label class="panel-label">Precio USD</label><input class="panel-inp" type="number" data-f="precio" value="${precio}"></div>
+    <div class="full-col"><label class="panel-label">Descripción</label><textarea class="panel-ta" data-f="descripcion">${esc(v.descripcion||'')}</textarea></div>
+  </div>
+
+  <div class="fotos-section">
+    <div class="fotos-title">Fotos (${(v.fotos||[]).length})</div>
+    <div class="fotos-grid" id="fotosGrid-${v.id}">
+      ${fotos}
+      <label class="foto-add">
+        <input type="file" accept="image/*" multiple>
+        <span class="foto-add-icon">+</span>
+        <span>Agregar</span>
+      </label>
+    </div>
+    <div class="upload-prog"><div class="upload-fill" id="upFill-${v.id}"></div></div>
+  </div>
+
+  <div class="panel-btns">
+    <button class="btn-save" onclick="saveVehicle('${v.id}')">Guardar cambios</button>
+    <button class="btn-toggle ${v.activo?'deactivate':'activate'}" onclick="toggleActivo('${v.id}',${!v.activo})">
+      ${v.activo?'Pausar':'Activar'}
+    </button>
+    <button class="btn-del" onclick="deleteVehicle('${v.id}')">Eliminar</button>
+  </div>
+  <div class="panel-msg" id="pmsg-${v.id}"></div>`;
+}
+
+// ── SAVE ──────────────────────────────────────────────────────────
+async function saveVehicle(id){
+  const panel=document.getElementById(`panel-${id}`);
+  const btn=panel.querySelector('.btn-save');
+  btn.disabled=true;btn.textContent='Guardando…';
+  const updates={};
+  panel.querySelectorAll('[data-f]').forEach(el=>{
+    const f=el.dataset.f;
+    let val=el.value.trim();
+    if(f==='anio'||f==='precio')val=val?Number(val):null;
+    updates[f]=val||null;
+  });
+  const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(updates)
+  });
+  const data=await res.json();
+  if(res.ok&&data.length){
+    const idx=DB.findIndex(x=>x.id==id);
+    if(idx>=0)DB[idx]={...DB[idx],...data[0]};
+    showMsg(id,'Guardado ✓','ok');
+    renderList();
+  } else {
+    showMsg(id,'Error al guardar','err');
+  }
+  btn.disabled=false;btn.textContent='Guardar cambios';
+}
+
+async function toggleActivo(id,val){
+  const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify({activo:val})
+  });
+  const data=await res.json();
+  if(res.ok&&data.length){
+    const idx=DB.findIndex(x=>x.id==id);
+    if(idx>=0)DB[idx].activo=val;
+    expandedId=null;
+    renderList();
+    // Re-open panel
+    setTimeout(()=>{
+      const el=document.querySelector(`[data-id="${id}"]`);
+      if(el){closePanel();openPanel(el,id,false);}
+    },50);
+  }
+}
+
+async function deleteVehicle(id){
+  if(!confirm('¿Eliminar este vehículo? Esta acción no se puede deshacer.'))return;
+  await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
+    method:'DELETE',
+    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`}
+  });
+  DB=DB.filter(x=>x.id!=id);
+  expandedId=null;
+  document.getElementById('badgeTotal').textContent=`${DB.length} vehículos`;
+  renderList();
+}
+
+// ── FOTOS ─────────────────────────────────────────────────────────
+async function uploadFotos(id,files){
+  const fill=document.getElementById(`upFill-${id}`);
+  const total=files.length;
+  let done=0;
+  const newUrls=[];
+  for(const file of files){
+    const ext=file.name.split('.').pop().toLowerCase()||'jpg';
+    const path=`${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const res=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':file.type||'image/jpeg'},
+      body:file
+    });
+    if(res.ok){
+      newUrls.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
     }
+    done++;
+    fill.style.width=`${(done/total)*100}%`;
+  }
+  if(!newUrls.length)return;
+  const v=DB.find(x=>x.id==id);
+  const merged=[...(v.fotos||[]),...newUrls];
+  const res2=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify({fotos:merged})
+  });
+  const data=await res2.json();
+  if(res2.ok&&data.length){
+    v.fotos=merged;
+    const grid=document.getElementById(`fotosGrid-${id}`);
+    if(grid){
+      const addBtn=grid.querySelector('.foto-add');
+      newUrls.forEach(url=>{
+        const d=document.createElement('div');
+        d.className='foto-item';
+        d.innerHTML=`<img src="${url}" alt=""><button class="foto-del" onclick="deleteFoto('${id}',${merged.indexOf(url)},event)">✕</button>`;
+        grid.insertBefore(d,addBtn);
+      });
+      grid.querySelector('.fotos-title') && (grid.previousElementSibling.textContent=`Fotos (${merged.length})`);
+    }
+  }
+  setTimeout(()=>{fill.style.width='0';},1500);
+}
 
-    // 3. Actualizar fotos en el vehículo
-    if (urls.length) {
-      await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${vid}`, {
-        method: 'PATCH',
-        headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fotos: urls })
+async function deleteFoto(id,idx,e){
+  e.stopPropagation();
+  if(!confirm('¿Eliminar esta foto?'))return;
+  const v=DB.find(x=>x.id==id);
+  const updated=(v.fotos||[]).filter((_,i)=>i!==idx);
+  const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify({fotos:updated})
+  });
+  const data=await res.json();
+  if(res.ok&&data.length){
+    v.fotos=updated;
+    expandedId=null;
+    renderList();
+    setTimeout(()=>{
+      const el=document.querySelector(`[data-id="${id}"]`);
+      if(el)openPanel(el,id,false);
+    },50);
+  }
+}
+
+// ── ADD VEHICLE ───────────────────────────────────────────────────
+const fileInput=document.getElementById('fileInput');
+const previews=document.getElementById('previews');
+const dropzone=document.getElementById('dropzone');
+
+fileInput.addEventListener('change',e=>addFiles(e.target.files));
+dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('drag');});
+dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('drag'));
+dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('drag');addFiles(e.dataTransfer.files);});
+
+function addFiles(files){
+  for(const f of files){
+    if(pendingFiles.length>=10)break;
+    if(!f.type.startsWith('image/'))continue;
+    pendingFiles.push(f);
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const idx=pendingFiles.indexOf(f);
+      const d=document.createElement('div');d.className='preview-item';
+      d.innerHTML=`<img src="${ev.target.result}"><button class="remove" onclick="removeFile(${idx})">✕</button>`;
+      previews.appendChild(d);
+    };
+    reader.readAsDataURL(f);
+  }
+}
+
+function removeFile(idx){
+  pendingFiles.splice(idx,1);
+  previews.innerHTML='';
+  pendingFiles.forEach((_,i)=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const d=document.createElement('div');d.className='preview-item';
+      d.innerHTML=`<img src="${ev.target.result}"><button class="remove" onclick="removeFile(${i})">✕</button>`;
+      previews.appendChild(d);
+    };
+    reader.readAsDataURL(pendingFiles[i]);
+  });
+}
+
+async function addVehicle(){
+  const marca=document.getElementById('nMarca').value.trim().toUpperCase();
+  const modelo=document.getElementById('nModelo').value.trim().toUpperCase();
+  const anio=document.getElementById('nAnio').value?Number(document.getElementById('nAnio').value):null;
+  const tipo=document.getElementById('nTipo').value;
+  const precio=document.getElementById('nPrecio').value?Number(document.getElementById('nPrecio').value):null;
+  const desc=document.getElementById('nDesc').value.trim();
+  if(!marca||!modelo){showFormMsg('Completá marca y modelo','err');return;}
+
+  const btn=document.getElementById('btnAdd');
+  btn.disabled=true;btn.textContent='Guardando…';
+  showFormMsg('','');
+
+  // Insert vehicle first
+  const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta`,{
+    method:'POST',
+    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify({marca,modelo,anio,tipo,precio,descripcion:desc||null,activo:true,fotos:[]})
+  });
+  const data=await res.json();
+  if(!res.ok||!data.length){
+    showFormMsg('Error al guardar el vehículo','err');
+    btn.disabled=false;btn.textContent='Guardar vehículo';
+    return;
+  }
+  const newId=data[0].id;
+
+  // Upload fotos
+  let fotos=[];
+  if(pendingFiles.length){
+    const fill=document.getElementById('progFill');
+    let done=0;
+    for(const file of pendingFiles){
+      const ext=file.name.split('.').pop().toLowerCase()||'jpg';
+      const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const r=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
+        method:'POST',
+        headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':file.type||'image/jpeg'},
+        body:file
+      });
+      if(r.ok)fotos.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
+      done++;fill.style.width=`${(done/pendingFiles.length)*100}%`;
+    }
+    if(fotos.length){
+      await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${newId}`,{
+        method:'PATCH',
+        headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json'},
+        body:JSON.stringify({fotos})
       });
     }
-
-    toast('Vehículo guardado', 'ok');
-    document.getElementById('vform').reset();
-    pendingFiles = [];
-    document.getElementById('previews').innerHTML = '';
-    prog.style.width = '0';
-    setTab('lista');
-  } catch(err) {
-    toast('Error: ' + err.message, 'err');
-  } finally {
-    btn.disabled = false; btn.textContent = 'Guardar vehículo';
+    setTimeout(()=>{fill.style.width='0';},1500);
   }
+
+  // Reset form
+  ['nMarca','nModelo','nAnio','nPrecio','nDesc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nTipo').value='SUV';
+  pendingFiles=[];previews.innerHTML='';
+  showFormMsg('Vehículo agregado ✓','ok');
+  btn.disabled=false;btn.textContent='Guardar vehículo';
+
+  // Reload list
+  await loadVehicles();
+  setTimeout(()=>switchTab('list'),800);
 }
 
-// LISTA
-async function loadVehiculos() {
-  const res = await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&order=created_at.desc`, {
-    headers: { 'apikey': ANON }
-  });
-  const data = await res.json();
-  const el = document.getElementById('vlist');
-  if (!data.length) { el.innerHTML = '<div class="empty-state">No hay vehículos aún</div>'; return; }
-  el.innerHTML = data.map(v => `
-    <div class="v-card" id="vc-${v.id}">
-      ${v.fotos?.length ? `<img class="v-thumb" src="${v.fotos[0]}" loading="lazy">` : '<div class="v-thumb-empty">Sin foto</div>'}
-      <div class="v-info">
-        <div class="v-marca">${v.marca}</div>
-        <div class="v-modelo">${v.modelo} ${v.anio||''}</div>
-        <div class="v-meta">${v.tipo}${v.precio?' · USD '+v.precio.toLocaleString('es-AR'):''} · ${v.fotos?.length||0} foto${v.fotos?.length!==1?'s':''}</div>
-      </div>
-      <div class="v-actions">
-        <button class="btn-toggle ${v.activo?'activo':''}" onclick="toggleActivo('${v.id}',${v.activo})">${v.activo?'ON':'OFF'}</button>
-        <button class="btn-del" onclick="deleteVehiculo('${v.id}')">Eliminar</button>
-      </div>
-    </div>`).join('');
+// ── HELPERS ───────────────────────────────────────────────────────
+function showMsg(id,txt,type){
+  const el=document.getElementById(`pmsg-${id}`);
+  if(!el)return;
+  el.textContent=txt;el.className=`panel-msg ${type}`;el.style.display='block';
+  setTimeout(()=>el.style.display='none',3000);
 }
-
-async function toggleActivo(id, actual) {
-  await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ activo: !actual })
-  });
-  loadVehiculos();
+function showFormMsg(txt,type){
+  const el=document.getElementById('addMsg');
+  el.textContent=txt;el.className=`form-msg ${type}`;el.style.display=txt?'block':'none';
 }
-
-async function deleteVehiculo(id) {
-  if (!confirm('¿Eliminar este vehículo?')) return;
-  await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`, {
-    method: 'DELETE',
-    headers: { 'apikey': ANON, 'Authorization': `Bearer ${SERVICE}` }
-  });
-  document.getElementById('vc-'+id)?.remove();
-  toast('Eliminado', 'ok');
-}
-
-// TOAST
-function toast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 3000);
-}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 </script>
 </body>
 </html>

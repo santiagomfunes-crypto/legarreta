@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Marca — Legarreta Automotores</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ────────────────────────────────────────────────────── */
+:root {
+  --black:   #000000;
+  --white:   #FFFFFF;
+  --gray1:   #1A1A1A;
+  --gray2:   #2A2A2A;
+  --gray3:   #737373;
+  --gray4:   #B3B3B3;
+  --gray5:   #E8E8E8;
+  --gray6:   #F5F5F5;
+  --accent:  #C8A86B;
+  --accent-d:#A8883B;
+  --sidebar: 260px;
+  --radius:  4px;
+}
+
+/* ─── RESET ─────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  font-family:'Inter', system-ui, sans-serif;
+  background:var(--white);
+  color:var(--black);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img { max-width:100%; display:block; }
+a { color:inherit; text-decoration:none; }
+
+/* ─── SIDEBAR NAV ───────────────────────────────────────────────── */
+.sidebar {
+  position:fixed; top:0; left:0; bottom:0;
+  width:var(--sidebar);
+  background:var(--black);
+  border-right:1px solid #1f1f1f;
+  overflow-y:auto;
+  z-index:200;
+  display:flex; flex-direction:column;
+  padding:2rem 0 3rem;
+}
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--gray2); }
+
+.sidebar-brand {
+  padding:0 1.75rem 2rem;
+  border-bottom:1px solid #1f1f1f;
+  margin-bottom:1.5rem;
+}
+.sidebar-brand img {
+  height:28px; width:auto;
+  filter:brightness(0) invert(1);
+  margin-bottom:.75rem;
+}
+.sidebar-brand-label {
+  font-size:.55rem; letter-spacing:.25em; text-transform:uppercase;
+  color:var(--gray3);
+}
+
+.nav-section-label {
+  font-size:.5rem; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--gray3); padding:.25rem 1.75rem .5rem;
+  margin-top:.5rem;
+}
+.sidebar a {
+  display:block; padding:.55rem 1.75rem;
+  font-size:.72rem; letter-spacing:.06em; color:var(--gray4);
+  transition:color .2s, background .2s;
+  border-left:2px solid transparent;
+  display:flex; align-items:center; gap:.6rem;
+}
+.sidebar a:hover { color:var(--white); background:rgba(255,255,255,.04); }
+.sidebar a.active { color:var(--accent); border-left-color:var(--accent); background:rgba(200,168,107,.05); }
+.sidebar a .nav-num {
+  font-size:.55rem; color:var(--gray3); width:18px; flex-shrink:0;
+  font-weight:600;
+}
+
+/* ─── MAIN LAYOUT ───────────────────────────────────────────────── */
+.main { margin-left:var(--sidebar); }
+
+/* ─── SECTION BASE ──────────────────────────────────────────────── */
+section {
+  position:relative; overflow:hidden;
+  padding:7rem 6rem;
+}
+section.dark  { background:var(--black); color:var(--white); }
+section.gray1 { background:var(--gray1); color:var(--white); }
+section.gray6 { background:var(--gray6); color:var(--black); }
+section.white { background:var(--white); color:var(--black); }
+
+.section-inner { max-width:900px; position:relative; z-index:2; }
+
+/* giant background number */
+.section-bg-num {
+  position:absolute; top:-.15em; left:4.5rem;
+  font-family:'Bebas Neue', sans-serif;
+  font-size:22vw; line-height:1;
+  color:rgba(255,255,255,.03);
+  pointer-events:none; user-select:none; z-index:1;
+}
+section.white .section-bg-num,
+section.gray6 .section-bg-num { color:rgba(0,0,0,.035); }
+
+.section-eyebrow {
+  font-size:.6rem; letter-spacing:.35em; text-transform:uppercase;
+  color:var(--gray3); margin-bottom:1rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.section-eyebrow::after { content:''; flex:1; height:1px; background:currentColor; opacity:.2; max-width:120px; }
+
+h2.section-title {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:clamp(2.5rem,5vw,4rem);
+  letter-spacing:.04em; line-height:1;
+  margin-bottom:.75rem;
+}
+.section-desc {
+  color:var(--gray3); font-size:.9rem; max-width:560px;
+  line-height:1.75; margin-bottom:3.5rem;
+}
+section.dark .section-desc, section.gray1 .section-desc { color:var(--gray4); }
+
+/* ─── COVER ─────────────────────────────────────────────────────── */
+.cover {
+  min-height:100vh;
+  background:var(--black);
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  padding:4rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+.cover-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.cover-vignette {
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.85) 100%);
+  pointer-events:none;
+}
+.cover-logo { height:80px; width:auto; filter:brightness(0) invert(1); margin-bottom:3rem; }
+.cover-title {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:clamp(1rem,2vw,1.3rem);
+  letter-spacing:.5em; text-transform:uppercase;
+  color:var(--gray3); margin-bottom:1.5rem;
+}
+.cover-line {
+  width:1px; height:60px;
+  background:linear-gradient(to bottom, transparent, var(--accent), transparent);
+  margin:0 auto 1.5rem;
+}
+.cover-tagline {
+  font-size:.7rem; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:3rem;
+}
+.cover-meta {
+  font-size:.6rem; letter-spacing:.2em; color:var(--gray3);
+  text-transform:uppercase;
+  display:flex; gap:2rem; justify-content:center;
+}
+.cover-meta span { display:flex; align-items:center; gap:.4rem; }
+
+/* ─── TOC ────────────────────────────────────────────────────────── */
+.toc-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:1px;
+  background:var(--gray5); border:1px solid var(--gray5);
+  margin-top:2rem;
+}
+.toc-item {
+  background:var(--white); padding:1.75rem 1.5rem;
+  display:flex; gap:1rem; align-items:flex-start;
+  transition:background .2s;
+  cursor:pointer;
+}
+.toc-item:hover { background:var(--gray6); }
+.toc-num {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:2rem; line-height:1; color:var(--gray5);
+  flex-shrink:0; width:42px;
+}
+.toc-text strong { display:block; font-size:.85rem; font-weight:600; margin-bottom:.2rem; }
+.toc-text span { font-size:.72rem; color:var(--gray3); }
+
+/* ─── BRAND / LA MARCA ──────────────────────────────────────────── */
+.values-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:1px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  margin-bottom:3rem;
+}
+.value-card {
+  padding:2rem 1.5rem;
+  background:var(--gray1);
+  border-left:3px solid transparent;
+  transition:border-color .3s;
+}
+.value-card:hover { border-left-color:var(--accent); }
+.value-icon {
+  width:36px; height:36px; margin-bottom:1.25rem;
+  color:var(--accent);
+}
+.value-card h3 { font-size:1.1rem; font-weight:700; margin-bottom:.5rem; }
+.value-card p { font-size:.8rem; color:var(--gray4); line-height:1.65; }
+
+.personality-grid {
+  display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2rem;
+}
+.personality-tag {
+  padding:.5rem 1.1rem;
+  font-size:.7rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+}
+.personality-tag.solid { background:var(--accent); color:var(--black); }
+.personality-tag.outline { border:1px solid rgba(255,255,255,.2); color:var(--gray4); }
+
+/* ─── LOGO SECTION ──────────────────────────────────────────────── */
+.logo-versions {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:1px;
+  background:var(--gray5);
+  border:1px solid var(--gray5);
+  margin-bottom:2rem;
+}
+.logo-version-card {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:3rem 2rem 1.5rem;
+  gap:1.5rem;
+  position:relative;
+}
+.logo-version-card.on-white  { background:var(--white); }
+.logo-version-card.on-black  { background:var(--black); }
+.logo-version-card.on-gray   { background:var(--gray6); }
+.logo-version-label {
+  font-size:.6rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gray3); text-align:center;
+}
+
+/* construction grid overlay */
+.logo-construction {
+  position:relative; display:inline-block;
+  margin:0 auto 2rem;
+}
+.logo-construction img { width:320px; position:relative; z-index:2; }
+.construction-overlay {
+  position:absolute; inset:-20px;
+  background-image:
+    linear-gradient(rgba(200,168,107,.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,168,107,.25) 1px, transparent 1px);
+  background-size:40px 40px;
+  border:1px dashed rgba(200,168,107,.4);
+  z-index:3; pointer-events:none;
+}
+.construction-margin {
+  position:absolute; inset:0;
+  border:2px dashed rgba(200,168,107,.5);
+  z-index:4; pointer-events:none;
+}
+.construction-label {
+  position:absolute; bottom:-2rem; left:0; right:0;
+  font-size:.6rem; color:var(--accent); text-align:center;
+  letter-spacing:.2em; text-transform:uppercase;
+}
+
+/* clearspace */
+.clearspace-demo {
+  display:inline-block; position:relative;
+  border:2px dashed var(--accent);
+  padding:40px; background:var(--white); margin:1.5rem 0;
+}
+.clearspace-demo img { width:220px; }
+.clearspace-label {
+  position:absolute; top:-1.2rem; left:50%; transform:translateX(-50%);
+  font-size:.55rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--accent); white-space:nowrap;
+  background:var(--white); padding:0 .5rem;
+}
+.clearspace-arrow {
+  position:absolute; left:-1.5rem; top:50%; transform:translateY(-50%);
+  font-size:.6rem; color:var(--accent); writing-mode:vertical-lr;
+  text-orientation:mixed; letter-spacing:.1em;
+}
+
+/* size showcase */
+.size-row {
+  display:flex; align-items:center; gap:2rem;
+  padding:1.5rem 0; border-bottom:1px solid var(--gray5);
+  flex-wrap:wrap;
+}
+.size-row:last-child { border-bottom:none; }
+.size-spec { font-size:.7rem; color:var(--gray3); min-width:80px; }
+.size-spec strong { display:block; color:var(--black); font-size:.85rem; }
+
+/* DON'Ts grid */
+.donts-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr));
+  gap:1rem; margin-top:1.5rem;
+}
+.dont-card {
+  border:1px solid var(--gray5); padding:1.25rem;
+  display:flex; flex-direction:column; align-items:center; gap:.75rem;
+  position:relative;
+}
+.dont-card::after {
+  content:'';
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  background:repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 8px,
+    rgba(200,0,0,.08) 8px, rgba(200,0,0,.08) 9px
+  );
+  pointer-events:none;
+}
+.dont-card img {
+  width:80px; height:auto;
+  position:relative; z-index:1;
+}
+.dont-label {
+  font-size:.65rem; color:var(--gray3); text-align:center;
+  position:relative; z-index:1;
+}
+.dont-badge {
+  position:absolute; top:-.5rem; right:-.5rem;
+  background:#C0392B; color:white;
+  border-radius:50%; width:20px; height:20px;
+  font-size:.7rem; display:flex; align-items:center; justify-content:center;
+  font-weight:700; z-index:2;
+}
+
+/* ─── COLOR SYSTEM ───────────────────────────────────────────────── */
+.palette-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+  gap:1rem; margin-bottom:3rem;
+}
+.swatch {
+  border-radius:var(--radius); overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+.swatch-block { height:100px; }
+.swatch-info { padding:1rem; background:var(--white); border:1px solid var(--gray5); border-top:none; }
+.swatch-info strong { display:block; font-size:.8rem; font-weight:700; margin-bottom:.3rem; }
+.swatch-info code { font-size:.65rem; color:var(--gray3); display:block; }
+
+.proportion-bar {
+  display:flex; height:48px; border-radius:var(--radius); overflow:hidden;
+  margin:1.5rem 0;
+}
+.proportion-bar span { display:flex; align-items:center; justify-content:center; font-size:.65rem; letter-spacing:.1em; }
+
+.contrast-table {
+  width:100%; border-collapse:collapse; font-size:.8rem; margin-top:1.5rem;
+}
+.contrast-table th {
+  text-align:left; padding:.75rem 1rem; font-weight:600; font-size:.65rem;
+  letter-spacing:.1em; text-transform:uppercase; border-bottom:2px solid var(--gray5);
+}
+.contrast-table td { padding:.65rem 1rem; border-bottom:1px solid var(--gray5); }
+.badge-pass { background:#1A7F37; color:white; font-size:.6rem; padding:.2rem .5rem; border-radius:2px; font-weight:700; }
+.badge-fail { background:#CF222E; color:white; font-size:.6rem; padding:.2rem .5rem; border-radius:2px; font-weight:700; }
+.contrast-preview {
+  width:80px; height:28px; display:flex; align-items:center; justify-content:center;
+  font-size:.7rem; font-weight:600; border-radius:2px;
+}
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────────────────── */
+.type-scale { display:flex; flex-direction:column; gap:0; }
+.type-row {
+  display:grid; grid-template-columns:160px 1fr;
+  gap:2rem; align-items:center;
+  padding:2rem 0; border-bottom:1px solid var(--gray5);
+}
+.type-row:last-child { border-bottom:none; }
+.type-spec { font-size:.65rem; color:var(--gray3); }
+.type-spec strong { display:block; color:var(--black); font-size:.72rem; font-weight:700; margin-bottom:.4rem; }
+
+.type-combo {
+  background:var(--gray6); padding:2.5rem; margin-top:2rem;
+  border-left:3px solid var(--accent);
+}
+
+/* ─── PHOTOGRAPHY ────────────────────────────────────────────────── */
+.photo-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:1px;
+  background:var(--gray2);
+}
+.photo-placeholder {
+  aspect-ratio:4/3;
+  background:var(--gray2);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:1.5rem; text-align:center; gap:.5rem;
+  position:relative; overflow:hidden;
+}
+.photo-placeholder::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg, var(--gray1) 0%, #0a0a0a 100%);
+}
+.photo-placeholder-icon { font-size:1.5rem; position:relative; z-index:1; }
+.photo-placeholder-label { font-size:.7rem; color:var(--gray4); position:relative; z-index:1; letter-spacing:.05em; }
+.photo-placeholder-sub { font-size:.6rem; color:var(--gray3); position:relative; z-index:1; }
+
+.photo-donts { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:1rem; margin-top:1.5rem; }
+.photo-dont { background:var(--gray6); padding:1.25rem; border-left:3px solid #CF222E; }
+.photo-dont strong { display:block; font-size:.75rem; margin-bottom:.25rem; }
+.photo-dont span { font-size:.7rem; color:var(--gray3); }
+
+/* ─── VOZ Y TONO ──────────────────────────────────────────────────── */
+.word-pairs { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--gray5); border:1px solid var(--gray5); margin:1.5rem 0; }
+.word-do   { background:#F0FFF4; padding:1rem 1.25rem; }
+.word-dont { background:#FFF5F5; padding:1rem 1.25rem; }
+.word-do strong   { color:#1A7F37; font-size:.65rem; letter-spacing:.15em; text-transform:uppercase; display:block; margin-bottom:.3rem; }
+.word-dont strong { color:#CF222E; font-size:.65rem; letter-spacing:.15em; text-transform:uppercase; display:block; margin-bottom:.3rem; }
+.word-do span, .word-dont span { font-size:.85rem; font-weight:500; }
+
+.msg-example {
+  background:var(--white); border-radius:8px;
+  border:1px solid var(--gray5);
+  overflow:hidden; margin-bottom:1.5rem;
+  box-shadow:0 2px 12px rgba(0,0,0,.05);
+}
+.msg-example-header {
+  background:var(--gray6); padding:.75rem 1.25rem;
+  font-size:.65rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gray3); font-weight:600; border-bottom:1px solid var(--gray5);
+}
+.msg-example-body { padding:1.5rem 1.25rem; font-size:.88rem; line-height:1.75; }
+.msg-example-body .bubble {
+  background:var(--gray6); padding:.85rem 1rem;
+  border-radius:0 12px 12px 12px; display:inline-block;
+  max-width:80%; margin-bottom:.5rem; font-size:.85rem;
+}
+.msg-example-body .bubble.out {
+  background:var(--accent); color:var(--black);
+  border-radius:12px 0 12px 12px; float:right; clear:both;
+}
+
+.tone-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:1rem; margin-top:1.5rem;
+}
+.tone-card {
+  border:1px solid var(--gray5); padding:1.5rem;
+  border-top:3px solid var(--accent);
+}
+.tone-card h4 { font-size:.8rem; font-weight:700; margin-bottom:.5rem; text-transform:uppercase; letter-spacing:.08em; }
+.tone-card p { font-size:.75rem; color:var(--gray3); line-height:1.6; }
+.tone-card .tone-example { font-size:.75rem; color:var(--gray2); font-style:italic; margin-top:.75rem; padding-top:.75rem; border-top:1px solid var(--gray5); }
+
+/* ─── APLICACIONES DIGITALES ─────────────────────────────────────── */
+.browser-mockup {
+  border-radius:8px; overflow:hidden;
+  border:1px solid var(--gray5);
+  box-shadow:0 8px 40px rgba(0,0,0,.1);
+  margin-bottom:2rem;
+}
+.browser-bar {
+  background:var(--gray6); padding:.6rem 1rem;
+  display:flex; align-items:center; gap:.5rem;
+  border-bottom:1px solid var(--gray5);
+}
+.browser-dot { width:10px; height:10px; border-radius:50%; }
+.browser-url {
+  flex:1; background:var(--white); border:1px solid var(--gray5);
+  border-radius:4px; padding:.25rem .75rem; font-size:.65rem; color:var(--gray3);
+  margin:0 .75rem;
+}
+.browser-nav-sim {
+  background:var(--black); padding:1rem 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.browser-nav-links { display:flex; gap:1.5rem; }
+.browser-nav-links span { font-size:.7rem; color:var(--gray3); }
+
+.social-spec-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:1.5rem; margin-top:1.5rem; }
+.social-spec {
+  text-align:center;
+  border:1px solid var(--gray5); padding:1.5rem 1rem;
+}
+.social-avatar {
+  width:72px; height:72px; border-radius:50%;
+  background:var(--black);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 1rem;
+}
+.social-avatar img { width:50px; filter:brightness(0) invert(1); }
+.social-spec-label { font-size:.65rem; color:var(--gray3); letter-spacing:.1em; text-transform:uppercase; }
+.social-spec strong { display:block; font-size:.8rem; font-weight:700; margin-bottom:.25rem; }
+
+.code-block {
+  background:#0d1117; color:#c9d1d9;
+  padding:1.5rem; border-radius:var(--radius);
+  font-family:'SF Mono','Fira Code',monospace; font-size:.75rem;
+  line-height:1.8; overflow-x:auto;
+  border:1px solid #30363d;
+}
+.code-block .cm { color:#8b949e; }
+.code-block .cs { color:#79c0ff; }
+.code-block .cv { color:#ffa657; }
+.code-block .ck { color:#ff7b72; }
+.code-block .cn { color:#d2a8ff; }
+
+/* ─── APLICACIONES FÍSICAS ───────────────────────────────────────── */
+.biz-card-wrap {
+  display:flex; flex-wrap:wrap; gap:2rem; margin:2rem 0; align-items:flex-start;
+}
+.biz-card {
+  width:320px; height:180px; border-radius:6px; overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  position:relative; flex-shrink:0;
+}
+.biz-card-front {
+  background:var(--black); padding:2rem;
+  height:100%; display:flex; flex-direction:column; justify-content:space-between;
+}
+.biz-card-front img { height:24px; filter:brightness(0) invert(1); }
+.biz-card-front .biz-tagline { font-size:.52rem; letter-spacing:.25em; text-transform:uppercase; color:var(--gray3); }
+.biz-card-back {
+  background:var(--gray1); padding:1.5rem 2rem;
+  height:100%; display:flex; flex-direction:column; justify-content:center; gap:.5rem;
+}
+.biz-card-back .biz-name { font-weight:700; font-size:.85rem; color:var(--white); }
+.biz-card-back .biz-role { font-size:.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem; }
+.biz-card-back .biz-contact { font-size:.65rem; color:var(--gray4); line-height:1.8; }
+.biz-card-accent {
+  position:absolute; bottom:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--accent), var(--accent-d));
+}
+
+/* ─── CONTACTO ───────────────────────────────────────────────────── */
+.contact-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:1px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08);
+  margin-bottom:3rem;
+}
+.contact-card { background:var(--gray1); padding:2rem 1.5rem; }
+.contact-card .cc-label { font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--gray3); margin-bottom:.75rem; }
+.contact-card .cc-value { font-size:.9rem; color:var(--white); font-weight:500; line-height:1.6; }
+.contact-card .cc-sub { font-size:.7rem; color:var(--gray4); margin-top:.25rem; }
+
+/* ─── UTILITY ────────────────────────────────────────────────────── */
+.accent { color:var(--accent); }
+.gold-line {
+  width:48px; height:3px;
+  background:linear-gradient(90deg, var(--accent), var(--accent-d));
+  margin-bottom:2rem;
+}
+.divider { border:none; border-top:1px solid var(--gray5); margin:3rem 0; }
+.label-row {
+  display:flex; align-items:center; gap:1rem;
+  font-size:.6rem; letter-spacing:.25em; text-transform:uppercase; color:var(--gray3);
+  margin-bottom:1.5rem;
+}
+.label-row::after { content:''; flex:1; height:1px; background:var(--gray5); }
+section.dark .label-row::after,
+section.gray1 .label-row::after { background:rgba(255,255,255,.1); }
+
+/* ─── MOBILE NAV ─────────────────────────────────────────────────── */
+.mobile-nav { display:none; }
+
+@media (max-width:900px) {
+  :root { --sidebar:0px; }
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  section { padding:4rem 1.75rem; }
+  .type-row { grid-template-columns:1fr; }
+  .word-pairs { grid-template-columns:1fr; }
+  .biz-card { width:100%; height:auto; }
+  .biz-card-front, .biz-card-back { height:160px; }
+
+  .mobile-nav {
+    display:block; position:sticky; top:0; z-index:200;
+    background:var(--black); border-bottom:1px solid #1f1f1f;
+  }
+  .mobile-nav summary {
+    padding:1rem 1.5rem;
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; list-style:none;
+    font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--white);
+  }
+  .mobile-nav summary::-webkit-details-marker { display:none; }
+  .mobile-nav-img { height:22px; filter:brightness(0) invert(1); }
+  .mobile-nav-links { padding:.5rem 0 1rem; }
+  .mobile-nav-links a {
+    display:block; padding:.6rem 1.5rem;
+    font-size:.75rem; color:var(--gray4);
+  }
+  .mobile-nav-links a:hover { color:var(--white); }
+}
+
+/* ─── PRINT ──────────────────────────────────────────────────────── */
+@media print {
+  .sidebar, .mobile-nav { display:none !important; }
+  .main { margin-left:0; }
+  section { break-inside:avoid; padding:3rem 2rem; }
+  .section-bg-num { display:none; }
+  body { font-size:11pt; }
+  .cover { min-height:auto; padding:3rem; page-break-after:always; }
+  a[href]::after { content:" (" attr(href) ")"; font-size:.7em; color:var(--gray3); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <img src="images/logo-original.png" alt="Legarreta Automotores">
+    <div class="sidebar-brand-label">Manual de Marca — 2025</div>
+  </div>
+
+  <span class="nav-section-label">Contenido</span>
+
+  <a href="#cover">
+    <span class="nav-num">—</span> Portada
+  </a>
+  <a href="#toc">
+    <span class="nav-num">00</span> Índice
+  </a>
+  <a href="#marca">
+    <span class="nav-num">01</span> La Marca
+  </a>
+  <a href="#logo">
+    <span class="nav-num">02</span> El Logo
+  </a>
+  <a href="#colores">
+    <span class="nav-num">03</span> Sistema de Color
+  </a>
+  <a href="#tipografia">
+    <span class="nav-num">04</span> Tipografía
+  </a>
+  <a href="#fotografia">
+    <span class="nav-num">05</span> Fotografía
+  </a>
+  <a href="#voz">
+    <span class="nav-num">06</span> Voz y Tono
+  </a>
+  <a href="#digital">
+    <span class="nav-num">07</span> Aplicaciones Digitales
+  </a>
+  <a href="#fisico">
+    <span class="nav-num">08</span> Aplicaciones Físicas
+  </a>
+  <a href="#contacto">
+    <span class="nav-num">09</span> Contacto y Recursos
+  </a>
+</nav>
+
+<!-- MOBILE NAV -->
+<details class="mobile-nav">
+  <summary>
+    <img class="mobile-nav-img" src="images/logo-original.png" alt="Legarreta">
+    <span>☰ Secciones</span>
+  </summary>
+  <div class="mobile-nav-links">
+    <a href="#cover">Portada</a>
+    <a href="#toc">Índice</a>
+    <a href="#marca">01 — La Marca</a>
+    <a href="#logo">02 — El Logo</a>
+    <a href="#colores">03 — Sistema de Color</a>
+    <a href="#tipografia">04 — Tipografía</a>
+    <a href="#fotografia">05 — Fotografía</a>
+    <a href="#voz">06 — Voz y Tono</a>
+    <a href="#digital">07 — Aplicaciones Digitales</a>
+    <a href="#fisico">08 — Aplicaciones Físicas</a>
+    <a href="#contacto">09 — Contacto</a>
+  </div>
+</details>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- ── COVER ─────────────────────────────────────────────────────── -->
+<section id="cover" class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-vignette"></div>
+  <img class="cover-logo" src="images/logo-original.png" alt="Legarreta Automotores">
+  <div class="cover-title">Manual de Marca</div>
+  <div class="cover-line"></div>
+  <div class="cover-tagline">Compra · Venta · Financiación</div>
+  <div class="cover-meta">
+    <span>Versión 1.0</span>
+    <span style="color:var(--gray2)">·</span>
+    <span>Tandil, Argentina</span>
+    <span style="color:var(--gray2)">·</span>
+    <span>2025</span>
+  </div>
+</section>
+
+<!-- ── ÍNDICE ─────────────────────────────────────────────────────── -->
+<section id="toc" class="white">
+  <div class="section-bg-num">00</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Índice</div>
+    <h2 class="section-title">Contenido del manual</h2>
+    <p class="section-desc">Este manual define el sistema visual y de comunicación de Legarreta Automotores. Cada sección establece reglas claras de uso — seguirlas garantiza una marca consistente y profesional.</p>
+
+    <div class="toc-grid">
+      <a href="#marca" class="toc-item">
+        <div class="toc-num">01</div>
+        <div class="toc-text"><strong>La Marca</strong><span>Filosofía, valores, personalidad</span></div>
+      </a>
+      <a href="#logo" class="toc-item">
+        <div class="toc-num">02</div>
+        <div class="toc-text"><strong>El Logo</strong><span>Versiones, grilla, usos correctos e incorrectos</span></div>
+      </a>
+      <a href="#colores" class="toc-item">
+        <div class="toc-num">03</div>
+        <div class="toc-text"><strong>Sistema de Color</strong><span>Paleta, proporciones, accesibilidad</span></div>
+      </a>
+      <a href="#tipografia" class="toc-item">
+        <div class="toc-num">04</div>
+        <div class="toc-text"><strong>Tipografía</strong><span>Jerarquía, escala, combinaciones</span></div>
+      </a>
+      <a href="#fotografia" class="toc-item">
+        <div class="toc-num">05</div>
+        <div class="toc-text"><strong>Fotografía</strong><span>Estilo, dirección, encuadres</span></div>
+      </a>
+      <a href="#voz" class="toc-item">
+        <div class="toc-num">06</div>
+        <div class="toc-text"><strong>Voz y Tono</strong><span>Personalidad verbal, ejemplos por canal</span></div>
+      </a>
+      <a href="#digital" class="toc-item">
+        <div class="toc-num">07</div>
+        <div class="toc-text"><strong>Aplicaciones Digitales</strong><span>Web, redes sociales, WhatsApp</span></div>
+      </a>
+      <a href="#fisico" class="toc-item">
+        <div class="toc-num">08</div>
+        <div class="toc-text"><strong>Aplicaciones Físicas</strong><span>Tarjetas, cartelería, uniformes</span></div>
+      </a>
+      <a href="#contacto" class="toc-item">
+        <div class="toc-num">09</div>
+        <div class="toc-text"><strong>Contacto y Recursos</strong><span>Archivos, responsable de marca</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── 01 LA MARCA ────────────────────────────────────────────────── -->
+<section id="marca" class="dark">
+  <div class="section-bg-num">01</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">La Marca</div>
+    <h2 class="section-title">¿Quiénes somos?</h2>
+    <p class="section-desc">Legarreta Automotores es una concesionaria de vehículos usados y 0km en Tandil, Argentina. No somos el vendedor que promete todo — somos el asesor en quien confiás antes de tomar una decisión importante.</p>
+
+    <div class="gold-line"></div>
+
+    <p style="font-size:.95rem;line-height:1.85;max-width:680px;color:var(--gray4);margin-bottom:3rem;">
+      Cada transacción comienza con una conversación honesta. Nos importa más que el cliente tome la decisión correcta que cerrar una venta rápida. Esa filosofía — construida con años de trabajo en Tandil — es el núcleo de todo lo que comunicamos.
+    </p>
+
+    <div class="label-row">Valores de marca</div>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+        </svg>
+        <h3>Confianza</h3>
+        <p>Información real, precios justos, sin presión. El cliente decide con claridad.</p>
+      </div>
+      <div class="value-card">
+        <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+        <h3>Trayectoria</h3>
+        <p>Años operando en Tandil. Conocemos el mercado local mejor que nadie.</p>
+      </div>
+      <div class="value-card">
+        <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+        </svg>
+        <h3>Transparencia</h3>
+        <p>Mostramos el historial del vehículo, el estado real, y las condiciones de financiación sin letra chica.</p>
+      </div>
+      <div class="value-card">
+        <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"/>
+        </svg>
+        <h3>Servicio</h3>
+        <p>Acompañamos desde la primera consulta hasta la entrega — y después también.</p>
+      </div>
+    </div>
+
+    <div class="label-row" style="margin-top:3rem;">Personalidad de marca</div>
+    <p style="font-size:.8rem;color:var(--gray4);margin-bottom:1.25rem;">Cómo queremos ser percibidos — no solo lo que hacemos, sino cómo lo comunicamos.</p>
+
+    <div class="personality-grid">
+      <span class="personality-tag solid">Confiable</span>
+      <span class="personality-tag solid">Directo</span>
+      <span class="personality-tag solid">Profesional</span>
+      <span class="personality-tag outline">Local y cercano</span>
+      <span class="personality-tag outline">Experimentado</span>
+      <span class="personality-tag outline">Serio</span>
+      <span class="personality-tag outline">Asesor, no vendedor</span>
+      <span class="personality-tag outline">Sin excesos</span>
+    </div>
+
+    <div style="margin-top:3rem;padding:2rem;background:rgba(200,168,107,.08);border-left:3px solid var(--accent);">
+      <p style="font-size:.8rem;color:var(--gray4);line-height:1.75;">
+        <strong style="color:var(--white);display:block;margin-bottom:.5rem;">Lo que NO somos</strong>
+        No somos una concesionaria flashy con globos y liquidaciones. No usamos lenguaje de feria. No prometemos lo que no podemos cumplir. No apelamos a la urgencia artificial. Somos serios porque nuestros clientes se merecen eso.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 02 EL LOGO ─────────────────────────────────────────────────── -->
+<section id="logo" class="white">
+  <div class="section-bg-num">02</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">El Logo</div>
+    <h2 class="section-title">Sistema de identidad</h2>
+    <p class="section-desc">El logo combina el monograma "LA" con el wordmark completo "LEGARRETA AUTOMOTORES". Juntos conforman la firma visual de la marca. Su uso correcto es innegociable.</p>
+
+    <!-- Construction grid -->
+    <div class="label-row">Grilla de construcción</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:2rem;">El logo se construye sobre una grilla modular que define proporciones, espaciado y relación entre el monograma y el wordmark. No alterar estas relaciones bajo ninguna circunstancia.</p>
+
+    <div style="background:var(--gray6);padding:3rem;text-align:center;margin-bottom:3rem;border:1px solid var(--gray5);">
+      <div class="logo-construction">
+        <img src="images/logo-original.png" alt="Logo con grilla de construcción">
+        <div class="construction-overlay"></div>
+        <div class="construction-margin"></div>
+        <div class="construction-label">Grilla modular — unidad = 1/8 del ancho total del logo</div>
+      </div>
+    </div>
+
+    <!-- Versions -->
+    <div class="label-row">Versiones aprobadas</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:1.5rem;">Usar siempre la versión con mayor contraste respecto al fondo. Estas son las únicas tres versiones permitidas.</p>
+
+    <div class="logo-versions">
+      <div class="logo-version-card on-white">
+        <img src="images/logo-original.png" alt="Logo negro sobre blanco" style="width:200px;">
+        <div class="logo-version-label">
+          <strong style="display:block;color:var(--black);margin-bottom:.2rem;">Negro sobre Blanco</strong>
+          <span>Uso principal. Documentos, print, web claro.</span>
+        </div>
+      </div>
+      <div class="logo-version-card on-black">
+        <img src="images/logo-original.png" alt="Logo blanco sobre negro" style="width:200px;filter:brightness(0) invert(1);">
+        <div class="logo-version-label" style="color:var(--gray4);">
+          <strong style="display:block;color:var(--white);margin-bottom:.2rem;">Blanco sobre Negro</strong>
+          <span>Fondos oscuros, cabeceras, redes sociales.</span>
+        </div>
+      </div>
+      <div class="logo-version-card on-gray">
+        <img src="images/logo-original.png" alt="Logo negro sobre gris" style="width:200px;">
+        <div class="logo-version-label">
+          <strong style="display:block;color:var(--black);margin-bottom:.2rem;">Negro sobre Gris Claro</strong>
+          <span>Aplicaciones secundarias, fondos neutros.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clearspace -->
+    <div class="label-row" style="margin-top:3rem;">Zona de protección</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:1.5rem;">El logo requiere un espacio mínimo libre a su alrededor equivalente a la altura de la "L" del monograma. Ningún elemento puede entrar en esa zona.</p>
+
+    <div style="text-align:center;padding:2rem 0;">
+      <div class="clearspace-demo">
+        <div class="clearspace-label">Zona de protección mínima</div>
+        <div class="clearspace-arrow">↕ altura de "L"</div>
+        <img src="images/logo-original.png" alt="Logo con zona de protección" style="width:220px;">
+      </div>
+      <p style="font-size:.7rem;color:var(--gray3);margin-top:1rem;">La zona marcada con línea discontinua es el área libre mínima.</p>
+    </div>
+
+    <!-- Minimum sizes -->
+    <div class="label-row" style="margin-top:3rem;">Tamaño mínimo</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:1.5rem;">Por debajo de 60px de ancho el logo pierde legibilidad. En esos casos, usar solo el monograma "LA".</p>
+
+    <div style="background:var(--gray6);padding:2rem;border:1px solid var(--gray5);">
+      <div class="size-row">
+        <div class="size-spec"><strong>200px</strong>Uso cómodo</div>
+        <img src="images/logo-original.png" alt="200px" style="width:200px;">
+      </div>
+      <div class="size-row">
+        <div class="size-spec"><strong>100px</strong>Mínimo recomendado</div>
+        <img src="images/logo-original.png" alt="100px" style="width:100px;">
+      </div>
+      <div class="size-row">
+        <div class="size-spec"><strong>60px</strong><span style="color:#CF222E;">Límite absoluto</span></div>
+        <img src="images/logo-original.png" alt="60px" style="width:60px;">
+        <span style="font-size:.7rem;color:var(--gray3);">← solo el monograma a este tamaño</span>
+      </div>
+    </div>
+
+    <!-- DON'Ts -->
+    <div class="label-row" style="margin-top:3rem;">Usos incorrectos</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:1.5rem;">Estas combinaciones están estrictamente prohibidas. Cualquier uso no contemplado en las versiones aprobadas se considera incorrecto.</p>
+
+    <div class="donts-grid">
+      <div class="dont-card">
+        <div class="dont-badge">✕</div>
+        <img src="images/logo-original.png" alt="Logo rotado" style="transform:rotate(15deg);opacity:.7;">
+        <div class="dont-label">No rotar el logo en ningún ángulo</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-badge">✕</div>
+        <img src="images/logo-original.png" alt="Logo estirado" style="width:80px;transform:scaleX(1.5);opacity:.7;">
+        <div class="dont-label">No deformar ni distorsionar proporciones</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-badge">✕</div>
+        <img src="images/logo-original.png" alt="Logo con color" style="filter:sepia(1) saturate(3) hue-rotate(200deg);opacity:.7;">
+        <div class="dont-label">No colorear el logo fuera de la paleta</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-badge">✕</div>
+        <div style="background:var(--gray3);padding:.5rem;width:80px;opacity:.7;">
+          <img src="images/logo-original.png" alt="Logo bajo contraste" style="filter:brightness(0) invert(1);opacity:.3;">
+        </div>
+        <div class="dont-label">No usar sobre fondos de bajo contraste</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-badge">✕</div>
+        <div style="background:repeating-linear-gradient(45deg,#eee,#eee 3px,#ddd 3px,#ddd 6px);padding:.5rem;width:80px;">
+          <img src="images/logo-original.png" alt="Logo sobre fondo complejo">
+        </div>
+        <div class="dont-label">No usar sobre fondos con texturas o fotos sin área limpia</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-badge">✕</div>
+        <img src="images/logo-original.png" alt="Solo outline" style="opacity:.15;width:80px;">
+        <div class="dont-label">No usar versión outline ni semitransparente</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03 COLORES ─────────────────────────────────────────────────── -->
+<section id="colores" class="gray1">
+  <div class="section-bg-num">03</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Sistema de Color</div>
+    <h2 class="section-title">Paleta de marca</h2>
+    <p class="section-desc">La paleta es intencional y contenida. Negro y blanco como protagonistas, dorado como acento reservado para jerarquía y distinción. La disciplina de color comunica profesionalismo.</p>
+
+    <div class="palette-grid">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#000000;"></div>
+        <div class="swatch-info">
+          <strong>Negro</strong>
+          <code>#000000</code>
+          <code>RGB 0, 0, 0</code>
+          <code style="color:var(--accent);margin-top:.4rem;display:block;">70% del sistema</code>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#FFFFFF;border:1px solid var(--gray5);"></div>
+        <div class="swatch-info">
+          <strong>Blanco</strong>
+          <code>#FFFFFF</code>
+          <code>RGB 255, 255, 255</code>
+          <code style="color:var(--accent);margin-top:.4rem;display:block;">20% del sistema</code>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#C8A86B;"></div>
+        <div class="swatch-info">
+          <strong>Dorado</strong>
+          <code>#C8A86B</code>
+          <code>RGB 200, 168, 107</code>
+          <code style="color:var(--accent);margin-top:.4rem;display:block;">10% del sistema</code>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#1A1A1A;"></div>
+        <div class="swatch-info">
+          <strong>Gris Profundo</strong>
+          <code>#1A1A1A</code>
+          <code>RGB 26, 26, 26</code>
+          <code style="color:var(--gray4);margin-top:.4rem;display:block;">Fondos secundarios</code>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#737373;"></div>
+        <div class="swatch-info">
+          <strong>Gris Medio</strong>
+          <code>#737373</code>
+          <code>RGB 115, 115, 115</code>
+          <code style="color:var(--gray4);margin-top:.4rem;display:block;">Texto secundario</code>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#E8E8E8;border:1px solid #ddd;"></div>
+        <div class="swatch-info">
+          <strong>Gris Claro</strong>
+          <code>#E8E8E8</code>
+          <code>RGB 232, 232, 232</code>
+          <code style="color:var(--gray4);margin-top:.4rem;display:block;">Bordes, divisores</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proportion -->
+    <div class="label-row">Proporciones de uso</div>
+    <p style="font-size:.8rem;color:var(--gray4);margin-bottom:1rem;">El dorado pierde su poder si se usa en exceso. Respetá las proporciones para mantener la jerarquía visual.</p>
+    <div class="proportion-bar">
+      <span style="flex:7;background:#000;color:#fff;font-size:.6rem;letter-spacing:.15em;">70% — NEGRO</span>
+      <span style="flex:2;background:#fff;color:#000;border:1px solid #ddd;font-size:.6rem;letter-spacing:.1em;">20%</span>
+      <span style="flex:1;background:var(--accent);color:#000;font-size:.55rem;letter-spacing:.05em;">10%</span>
+    </div>
+    <p style="font-size:.7rem;color:var(--gray3);margin-top:.5rem;">Negro = fondos y tipografía principal · Blanco = espacios y texto sobre negro · Dorado = acentos, CTAs, jerarquía selectiva</p>
+
+    <!-- Contrast table -->
+    <div class="label-row" style="margin-top:3rem;">Accesibilidad — Contraste WCAG AA</div>
+    <p style="font-size:.8rem;color:var(--gray4);margin-bottom:1rem;">Solo usar combinaciones de color que aprueben el estándar WCAG AA (ratio ≥ 4.5:1 para texto normal).</p>
+
+    <table class="contrast-table" style="color:var(--white);">
+      <thead>
+        <tr>
+          <th>Combinación</th>
+          <th>Preview</th>
+          <th>Ratio</th>
+          <th>WCAG AA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Blanco sobre Negro</td>
+          <td><div class="contrast-preview" style="background:#000;color:#fff;">Texto</div></td>
+          <td>21:1</td>
+          <td><span class="badge-pass">PASS</span></td>
+        </tr>
+        <tr>
+          <td>Negro sobre Blanco</td>
+          <td><div class="contrast-preview" style="background:#fff;color:#000;">Texto</div></td>
+          <td>21:1</td>
+          <td><span class="badge-pass">PASS</span></td>
+        </tr>
+        <tr>
+          <td>Dorado sobre Negro</td>
+          <td><div class="contrast-preview" style="background:#000;color:#C8A86B;">Texto</div></td>
+          <td>7.2:1</td>
+          <td><span class="badge-pass">PASS</span></td>
+        </tr>
+        <tr>
+          <td>Negro sobre Dorado</td>
+          <td><div class="contrast-preview" style="background:#C8A86B;color:#000;">Texto</div></td>
+          <td>7.2:1</td>
+          <td><span class="badge-pass">PASS</span></td>
+        </tr>
+        <tr>
+          <td>Gris Medio sobre Blanco</td>
+          <td><div class="contrast-preview" style="background:#fff;color:#737373;">Texto</div></td>
+          <td>4.6:1</td>
+          <td><span class="badge-pass">PASS</span></td>
+        </tr>
+        <tr>
+          <td>Gris Claro sobre Negro</td>
+          <td><div class="contrast-preview" style="background:#000;color:#E8E8E8;">Texto</div></td>
+          <td>14.3:1</td>
+          <td><span class="badge-pass">PASS</span></td>
+        </tr>
+        <tr>
+          <td>Dorado sobre Blanco</td>
+          <td><div class="contrast-preview" style="background:#fff;color:#C8A86B;">Texto</div></td>
+          <td>2.8:1</td>
+          <td><span class="badge-fail">FAIL — solo decorativo</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:2rem;padding:1.5rem;background:rgba(200,168,107,.08);border-left:3px solid var(--accent);">
+      <p style="font-size:.8rem;color:var(--gray4);">
+        <strong style="color:var(--white);display:block;margin-bottom:.4rem;">Regla de oro</strong>
+        El dorado (#C8A86B) sobre blanco no pasa WCAG AA. Solo usarlo sobre negro o para elementos puramente decorativos (líneas, bordes, íconos) donde el color no transmite información crítica.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 04 TIPOGRAFÍA ───────────────────────────────────────────────── -->
+<section id="tipografia" class="white">
+  <div class="section-bg-num">04</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Tipografía</div>
+    <h2 class="section-title">Sistema tipográfico</h2>
+    <p class="section-desc">Dos familias, dos roles. Bebas Neue para todo lo display — impacto, fuerza, presencia. Inter para todo lo funcional — claridad, lectura, confianza.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;">
+      <div style="padding:2rem;background:var(--black);color:var(--white);">
+        <div style="font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gray3);margin-bottom:1rem;">Display / Titulares</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1;margin-bottom:1rem;">Bebas Neue</div>
+        <div style="font-size:.7rem;color:var(--gray4);line-height:1.7;">
+          ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+          0123456789<br><br>
+          Solo mayúsculas · Solo display<br>
+          Google Fonts — gratuita
+        </div>
+      </div>
+      <div style="padding:2rem;background:var(--gray6);">
+        <div style="font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gray3);margin-bottom:1rem;">Cuerpo / UI</div>
+        <div style="font-family:'Inter',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:1rem;">Inter</div>
+        <div style="font-size:.7rem;color:var(--gray3);line-height:1.7;">
+          ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+          abcdefghijklmnopqrstuvwxyz<br>
+          0123456789<br><br>
+          Pesos 300–800 · Todos los usos funcionales<br>
+          Google Fonts — gratuita
+        </div>
+      </div>
+    </div>
+
+    <div class="label-row">Escala tipográfica</div>
+
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-spec">
+          <strong>Display Hero</strong>
+          Bebas Neue · 96–120px<br>
+          Letter-spacing: .02em<br>
+          Line-height: 1
+        </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,6rem);line-height:1;letter-spacing:.02em;">
+          Usados Premium<br><span class="accent">Tandil</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <strong>H1</strong>
+          Bebas Neue · 48px<br>
+          Letter-spacing: .04em<br>
+          Line-height: 1.05
+        </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3rem);letter-spacing:.04em;line-height:1.05;">
+          Encontrá tu próximo vehículo
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <strong>H2</strong>
+          Inter · 32px · 700<br>
+          Letter-spacing: -.02em<br>
+          Line-height: 1.2
+        </div>
+        <div style="font-size:clamp(1.3rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;line-height:1.2;">
+          Financiación disponible en 24, 36 y 48 cuotas
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <strong>H3</strong>
+          Inter · 20px · 600<br>
+          Letter-spacing: -.01em<br>
+          Line-height: 1.3
+        </div>
+        <div style="font-size:1.25rem;font-weight:600;letter-spacing:-.01em;line-height:1.3;">
+          Toyota Hilux 4×4 2022 — 80.000 km
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <strong>Body</strong>
+          Inter · 16px · 400<br>
+          Letter-spacing: 0<br>
+          Line-height: 1.65
+        </div>
+        <div style="font-size:1rem;font-weight:400;line-height:1.65;color:var(--gray3);max-width:480px;">
+          Impecable estado de conservación. Única mano, service oficial al día, lista para transferencia. Consultá disponibilidad y condiciones de financiación sin compromiso.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-spec">
+          <strong>Label / Small</strong>
+          Inter · 12px · 500<br>
+          Letter-spacing: .12em<br>
+          Line-height: 1.4<br>
+          UPPERCASE
+        </div>
+        <div>
+          <span style="font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gray3);">Km · Año · Combustible · Transmisión</span><br>
+          <span style="font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);">Financiación Disponible</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combination -->
+    <div class="label-row" style="margin-top:3rem;">Combinación ejemplo</div>
+    <div class="type-combo">
+      <div style="font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gray3);margin-bottom:.75rem;">USADOS · TANDIL · 2022</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1;margin-bottom:.5rem;">Ford Ranger XLS 4×4</div>
+      <div style="font-size:1.1rem;font-weight:600;color:var(--accent);margin-bottom:1rem;">$18.500.000 · Financiación disponible</div>
+      <p style="font-size:.9rem;color:var(--gray3);line-height:1.7;max-width:500px;">Única mano, service oficial completo, impecable interior y exterior. Apta para transferencia inmediata.</p>
+    </div>
+
+    <!-- DON'Ts -->
+    <div class="label-row" style="margin-top:3rem;">Reglas tipográficas</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div style="padding:1.25rem;background:#F0FFF4;border-left:3px solid #1A7F37;">
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#1A7F37;margin-bottom:.75rem;">DO ✓</div>
+        <ul style="font-size:.8rem;color:var(--gray2);line-height:2;list-style:none;">
+          <li>Bebas Neue solo para títulos y display</li>
+          <li>Inter para todo el cuerpo y UI</li>
+          <li>Máximo dos pesos de Inter por pantalla</li>
+          <li>Letter-spacing amplio en labels uppercase</li>
+          <li>Jerarquía clara entre niveles</li>
+        </ul>
+      </div>
+      <div style="padding:1.25rem;background:#FFF5F5;border-left:3px solid #CF222E;">
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#CF222E;margin-bottom:.75rem;">DON'T ✕</div>
+        <ul style="font-size:.8rem;color:var(--gray2);line-height:2;list-style:none;">
+          <li>No usar Bebas Neue para texto corrido</li>
+          <li>No mezclar con otras familias tipográficas</li>
+          <li>No usar Inter en peso 300 para cuerpo</li>
+          <li>No escribir cuerpo todo en mayúsculas</li>
+          <li>No usar más de 4 niveles en un módulo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 05 FOTOGRAFÍA ───────────────────────────────────────────────── -->
+<section id="fotografia" class="gray1">
+  <div class="section-bg-num">05</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Fotografía</div>
+    <h2 class="section-title">Dirección de imagen</h2>
+    <p class="section-desc">Las fotos son el producto. Una foto mal tomada destruye la percepción de valor del vehículo y de la marca. El estilo debe ser consistente: alto contraste, dramático, limpio.</p>
+
+    <div class="label-row">Encuadres aprobados</div>
+
+    <div class="photo-grid">
+      <div class="photo-placeholder">
+        <div class="photo-placeholder-icon">◢</div>
+        <div class="photo-placeholder-label">3/4 Frontal</div>
+        <div class="photo-placeholder-sub">Ángulo clásico. 45° desde adelante-izquierda. Fondo neutro o desenfocado.</div>
+      </div>
+      <div class="photo-placeholder">
+        <div class="photo-placeholder-icon">◩</div>
+        <div class="photo-placeholder-label">3/4 Trasero</div>
+        <div class="photo-placeholder-sub">Muestra laterales y cajón/baúl. Mismo ángulo, 45° desde atrás-derecha.</div>
+      </div>
+      <div class="photo-placeholder">
+        <div class="photo-placeholder-icon">⬤</div>
+        <div class="photo-placeholder-label">Detalle Llantas</div>
+        <div class="photo-placeholder-sub">Nivel del suelo, perpendicular. Foco en llanta y arco. Máximo dramatismo.</div>
+      </div>
+      <div class="photo-placeholder">
+        <div class="photo-placeholder-icon">▣</div>
+        <div class="photo-placeholder-label">Interior Conductor</div>
+        <div class="photo-placeholder-sub">Desde asiento trasero o puerta abierta. Tablero, volante, consola. Luz natural.</div>
+      </div>
+      <div class="photo-placeholder">
+        <div class="photo-placeholder-icon">◈</div>
+        <div class="photo-placeholder-label">Detalle Insignia</div>
+        <div class="photo-placeholder-sub">Logo de marca del auto, foco manual, fondo desenfocado. Cuidar nitidez máxima.</div>
+      </div>
+      <div class="photo-placeholder">
+        <div class="photo-placeholder-icon">▷</div>
+        <div class="photo-placeholder-label">Perfil completo</div>
+        <div class="photo-placeholder-sub">Lateral 90°. Mostrar línea entera. Fondo uniforme imprescindible.</div>
+      </div>
+    </div>
+
+    <!-- Style direction -->
+    <div class="label-row" style="margin-top:3rem;">Estilo de edición</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
+      <div style="padding:1.5rem;background:var(--gray2);border-left:3px solid var(--accent);">
+        <strong style="font-size:.75rem;display:block;margin-bottom:.4rem;color:var(--white);">Contraste</strong>
+        <p style="font-size:.72rem;color:var(--gray4);">Alto contraste. Sombras profundas, luces controladas. Nada sobreexpuesto.</p>
+      </div>
+      <div style="padding:1.5rem;background:var(--gray2);border-left:3px solid var(--accent);">
+        <strong style="font-size:.75rem;display:block;margin-bottom:.4rem;color:var(--white);">Saturación</strong>
+        <p style="font-size:.72rem;color:var(--gray4);">Leve desaturación general. Nunca saturación exagerada. Los colores del auto deben verse naturales.</p>
+      </div>
+      <div style="padding:1.5rem;background:var(--gray2);border-left:3px solid var(--accent);">
+        <strong style="font-size:.75rem;display:block;margin-bottom:.4rem;color:var(--white);">Nitidez</strong>
+        <p style="font-size:.72rem;color:var(--gray4);">Máxima nitidez en el sujeto principal. Desenfoque selectivo de fondo aceptado.</p>
+      </div>
+      <div style="padding:1.5rem;background:var(--gray2);border-left:3px solid var(--accent);">
+        <strong style="font-size:.75rem;display:block;margin-bottom:.4rem;color:var(--white);">Luz</strong>
+        <p style="font-size:.72rem;color:var(--gray4);">Luz natural preferida. Horario dorado o cielo nublado uniforme. Evitar luz de mediodía dura.</p>
+      </div>
+    </div>
+
+    <div class="label-row">Lo que NO hacemos</div>
+    <div class="photo-donts">
+      <div class="photo-dont">
+        <strong>Sin fotos movidas</strong>
+        <span>El vehículo debe estar completamente quieto y enfocado. Nada borroso.</span>
+      </div>
+      <div class="photo-dont">
+        <strong>Sin fotos de noche sin estudio</strong>
+        <span>La luz artificial amateur distorsiona colores y crea sombras duras.</span>
+      </div>
+      <div class="photo-dont">
+        <strong>Sin saturación excesiva</strong>
+        <span>Filtros de Instagram, tonos naranja/teal, HDR exagerado — prohibido.</span>
+      </div>
+      <div class="photo-dont">
+        <strong>Sin fondos desordenados</strong>
+        <span>Sin autos atrás, sin basura, sin personas ajenas. El protagonista es el vehículo.</span>
+      </div>
+      <div class="photo-dont">
+        <strong>Sin fotos de teléfono sin edición</strong>
+        <span>Usar modo retrato, modo pro, o editar en Lightroom Mobile mínimamente.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 06 VOZ Y TONO ───────────────────────────────────────────────── -->
+<section id="voz" class="white">
+  <div class="section-bg-num">06</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Voz y Tono</div>
+    <h2 class="section-title">Cómo hablamos</h2>
+    <p class="section-desc">La voz de la marca es siempre la misma — el tono varía según el contexto. Somos directos, claros y profesionales. Nunca feriantes, nunca exagerados, nunca genéricos.</p>
+
+    <div class="label-row">Vocabulario de marca</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:1rem;">Estas elecciones de palabras no son casuales — definen la personalidad verbal.</p>
+
+    <div class="word-pairs">
+      <div class="word-do"><strong>DECIMOS ✓</strong><span>Vehículo</span></div>
+      <div class="word-dont"><strong>NUNCA ✕</strong><span>Autazo, máquina, fierro</span></div>
+
+      <div class="word-do"><strong>DECIMOS ✓</strong><span>Consultá sin compromiso</span></div>
+      <div class="word-dont"><strong>NUNCA ✕</strong><span>¡Aprovechá ya! ¡Última oportunidad!</span></div>
+
+      <div class="word-do"><strong>DECIMOS ✓</strong><span>Financiación disponible</span></div>
+      <div class="word-dont"><strong>NUNCA ✕</strong><span>¡Cuotas increíbles! ¡Sin interés!</span></div>
+
+      <div class="word-do"><strong>DECIMOS ✓</strong><span>Impecable estado de conservación</span></div>
+      <div class="word-dont"><strong>NUNCA ✕</strong><span>Como nuevo, cero kilómetros (si no lo es)</span></div>
+
+      <div class="word-do"><strong>DECIMOS ✓</strong><span>Precio a consultar</span></div>
+      <div class="word-dont"><strong>NUNCA ✕</strong><span>¡Precio de locos! ¡Rematado!</span></div>
+
+      <div class="word-do"><strong>DECIMOS ✓</strong><span>Service oficial al día</span></div>
+      <div class="word-dont"><strong>NUNCA ✕</strong><span>En perfectas condiciones (sin respaldo)</span></div>
+    </div>
+
+    <!-- WhatsApp example -->
+    <div class="label-row" style="margin-top:3rem;">WhatsApp — estilo de respuesta</div>
+    <div class="msg-example">
+      <div class="msg-example-header">💬 WhatsApp Business — Consulta entrante</div>
+      <div class="msg-example-body">
+        <div style="clear:both;margin-bottom:.75rem;">
+          <div class="bubble">Hola! Vi la Ranger XLS, cuánto sale?</div>
+        </div>
+        <div style="clear:both;margin-bottom:.5rem;">
+          <div class="bubble out">Buenas! La Ranger XLS está en $18.500.000. ¿Preferís abonar al contado o te interesa ver las opciones de financiación?</div>
+        </div>
+        <div style="clear:both;margin-bottom:.75rem;">
+          <div class="bubble">Me interesa financiar</div>
+        </div>
+        <div style="clear:both;">
+          <div class="bubble out">Perfecto. Tenemos planes a 24, 36 y 48 cuotas. ¿Tenés posibilidad de venir a verla esta semana? Así te armo los números en detalle.</div>
+        </div>
+        <div style="clear:both;"></div>
+      </div>
+    </div>
+
+    <!-- Catalog description -->
+    <div class="label-row">Catálogo web — descripción tipo</div>
+    <div class="msg-example">
+      <div class="msg-example-header">🌐 Sitio web — ficha de vehículo</div>
+      <div class="msg-example-body" style="background:var(--gray6);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;margin-bottom:.25rem;">Ford Ranger XLS 4×4 2022</div>
+        <div style="font-size:.8rem;color:var(--accent);font-weight:600;margin-bottom:.75rem;">$18.500.000 · Financiación disponible</div>
+        <p style="font-size:.85rem;color:var(--gray2);line-height:1.75;">
+          Única mano desde 0km. Service oficial completo con libreta. Interior en excelente estado, sin detalles. Apta para transferencia inmediata. Vidrios eléctricos, aire acondicionado, cierre centralizado, levantavidrios eléctrico, dirección asistida hidráulica.
+        </p>
+        <p style="font-size:.75rem;color:var(--gray3);margin-top:.75rem;">Consultá disponibilidad · +54 2494 585374</p>
+      </div>
+    </div>
+
+    <!-- Instagram -->
+    <div class="label-row">Instagram — caption tipo</div>
+    <div class="msg-example">
+      <div class="msg-example-header">📸 Instagram — publicación de vehículo</div>
+      <div class="msg-example-body">
+        <p style="font-size:.88rem;line-height:1.8;">
+          <strong>Ford Ranger XLS 4×4 · 2022 · 80.000 km</strong><br><br>
+          Única mano, service oficial al día. Lista para transferencia.<br><br>
+          Financiación disponible. Consultá por WhatsApp.<br><br>
+          <span style="color:var(--gray3);">#LegarretaAutomotores #Tandil #FordRanger #Automotores #Usados</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Tone by context -->
+    <div class="label-row" style="margin-top:3rem;">Tono por contexto</div>
+    <div class="tone-grid">
+      <div class="tone-card">
+        <h4>WhatsApp</h4>
+        <p>Directo, cálido, breve. Responder en menos de 60 minutos. Sin emojis excesivos. Una pregunta por mensaje.</p>
+        <div class="tone-example">"Buenas, sí, está disponible. ¿Cuándo podés venir?"</div>
+      </div>
+      <div class="tone-card">
+        <h4>Catálogo web</h4>
+        <p>Informativo, preciso, objetivo. Los datos hablan. Sin adjetivos vacíos. Siempre verificables.</p>
+        <div class="tone-example">"Único dueño. Service oficial completo."</div>
+      </div>
+      <div class="tone-card">
+        <h4>Instagram</h4>
+        <p>Más visual, menos texto. El copy apoya a la foto. Sin exclamaciones de feria. Hashtags mínimos y precisos.</p>
+        <div class="tone-example">"Ranger XLS 4×4 · Tandil · Consultá."</div>
+      </div>
+      <div class="tone-card">
+        <h4>Email formal</h4>
+        <p>Completo, estructurado, sin abreviaturas. Incluir todos los datos relevantes. Firma corporativa.</p>
+        <div class="tone-example">"Le adjuntamos la documentación solicitada..."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 07 APLICACIONES DIGITALES ──────────────────────────────────── -->
+<section id="digital" class="gray1">
+  <div class="section-bg-num">07</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Aplicaciones Digitales</div>
+    <h2 class="section-title">Presencia online</h2>
+    <p class="section-desc">La marca debe ser reconocible en todas las plataformas digitales. Especificaciones exactas para cada canal — no improvisar.</p>
+
+    <!-- Website nav mockup -->
+    <div class="label-row">Sitio web — navegación</div>
+    <div class="browser-mockup">
+      <div class="browser-bar">
+        <div class="browser-dot" style="background:#ff5f57;"></div>
+        <div class="browser-dot" style="background:#febc2e;"></div>
+        <div class="browser-dot" style="background:#28c840;"></div>
+        <div class="browser-url">legarretaautomotores.com.ar</div>
+      </div>
+      <div class="browser-nav-sim">
+        <img src="images/logo-original.png" alt="Logo" style="height:32px;filter:brightness(0) invert(1);">
+        <div class="browser-nav-links">
+          <span>Catálogo</span>
+          <span>Financiación</span>
+          <span>Nosotros</span>
+          <span style="color:var(--accent);font-weight:600;">Contacto</span>
+        </div>
+      </div>
+      <div style="background:var(--gray6);height:80px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:.7rem;color:var(--gray3);">— área de contenido —</span>
+      </div>
+    </div>
+    <p style="font-size:.75rem;color:var(--gray4);margin-bottom:.5rem;"><strong style="color:var(--white);">Especificaciones del logo en nav:</strong> altura 32px, filter: brightness(0) invert(1), padding horizontal mínimo 24px desde el borde.</p>
+
+    <!-- CSS Code block -->
+    <div class="label-row" style="margin-top:2rem;">Implementación CSS</div>
+    <div class="code-block">
+<span class="cm">/* Logo en navegación — Legarreta Automotores */</span>
+<span class="cn">.nav-logo</span> {
+  <span class="cs">height</span>: <span class="cv">32px</span>;
+  <span class="cs">width</span>: <span class="cv">auto</span>;
+  <span class="cs">filter</span>: <span class="cv">brightness(0) invert(1)</span>; <span class="cm">/* versión blanca */</span>
+  <span class="cs">display</span>: <span class="cv">block</span>;
+}
+
+<span class="cm">/* Sobre fondo claro — versión negro */</span>
+<span class="cn">.nav-logo.dark-mode</span> {
+  <span class="cs">filter</span>: <span class="cv">none</span>; <span class="cm">/* logo original negro */</span>
+}
+
+<span class="cm">/* Mínimos de zona de protección */</span>
+<span class="cn">.nav-logo-wrap</span> {
+  <span class="cs">padding</span>: <span class="cv">0 24px</span>;
+  <span class="cs">display</span>: <span class="cv">flex</span>;
+  <span class="cs">align-items</span>: <span class="cv">center</span>;
+}
+    </div>
+
+    <!-- Social media specs -->
+    <div class="label-row" style="margin-top:3rem;">Redes sociales — especificaciones</div>
+    <div class="social-spec-grid">
+      <div class="social-spec">
+        <div class="social-avatar">
+          <img src="images/logo-original.png" alt="Avatar Instagram">
+        </div>
+        <strong>Instagram</strong>
+        <div class="social-spec-label">Foto de perfil</div>
+        <p style="font-size:.7rem;color:var(--gray3);margin-top:.5rem;">320×320px · Logo centrado en círculo negro · Padding interior = 18% del radio</p>
+      </div>
+      <div class="social-spec">
+        <div class="social-avatar" style="border-radius:var(--radius);">
+          <img src="images/logo-original.png" alt="Avatar Facebook">
+        </div>
+        <strong>Facebook</strong>
+        <div class="social-spec-label">Foto de perfil</div>
+        <p style="font-size:.7rem;color:var(--gray3);margin-top:.5rem;">180×180px · Cuadrado con bordes redondeados · Mismas reglas de padding</p>
+      </div>
+      <div class="social-spec">
+        <div class="social-avatar" style="border-radius:var(--radius);">
+          <img src="images/logo-original.png" alt="Avatar WhatsApp">
+        </div>
+        <strong>WhatsApp Business</strong>
+        <div class="social-spec-label">Foto de perfil</div>
+        <p style="font-size:.7rem;color:var(--gray3);margin-top:.5rem;">500×500px · Fondo negro · Logo blanco centrado</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;padding:1.5rem;background:rgba(200,168,107,.08);border-left:3px solid var(--accent);">
+      <p style="font-size:.8rem;color:var(--gray4);line-height:1.75;">
+        <strong style="color:var(--white);display:block;margin-bottom:.4rem;">Regla para avatares</strong>
+        Siempre fondo negro (#000000) con logo en blanco (filter: brightness(0) invert(1)). Nunca fondo blanco para avatares — en modo oscuro de las plataformas el logo negro desaparece.
+      </p>
+    </div>
+
+    <!-- WhatsApp Business setup -->
+    <div class="label-row" style="margin-top:3rem;">WhatsApp Business — configuración</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;">
+      <div style="padding:1.25rem;background:var(--gray2);">
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gray3);margin-bottom:.5rem;">Nombre</div>
+        <div style="font-size:.88rem;color:var(--white);">Legarreta Automotores</div>
+      </div>
+      <div style="padding:1.25rem;background:var(--gray2);">
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gray3);margin-bottom:.5rem;">Categoría</div>
+        <div style="font-size:.88rem;color:var(--white);">Automotores / Vehículos</div>
+      </div>
+      <div style="padding:1.25rem;background:var(--gray2);">
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gray3);margin-bottom:.5rem;">Descripción</div>
+        <div style="font-size:.82rem;color:var(--gray4);">Compra · Venta · Financiación de vehículos en Tandil. Consultá sin compromiso.</div>
+      </div>
+      <div style="padding:1.25rem;background:var(--gray2);">
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gray3);margin-bottom:.5rem;">Horario de atención</div>
+        <div style="font-size:.82rem;color:var(--gray4);">Lun–Vie 9:00–18:00 · Sáb 9:00–13:00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 08 APLICACIONES FÍSICAS ────────────────────────────────────── -->
+<section id="fisico" class="white">
+  <div class="section-bg-num">08</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Aplicaciones Físicas</div>
+    <h2 class="section-title">Materialización de marca</h2>
+    <p class="section-desc">La marca vive también en el mundo físico. La misma disciplina visual — negro, blanco, dorado, Bebas Neue, Inter — se aplica a todo material impreso y señalética.</p>
+
+    <!-- Business cards -->
+    <div class="label-row">Tarjetas personales</div>
+    <p style="font-size:.8rem;color:var(--gray3);margin-bottom:1.5rem;">Formato estándar 90×50mm. Impresión offset en negro total, tinta dorada para el acento inferior. Papel 350gr con barniz UV selectivo en el logo.</p>
+
+    <div class="biz-card-wrap">
+      <!-- Front -->
+      <div>
+        <p style="font-size:.6rem;color:var(--gray3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem;">Anverso</p>
+        <div class="biz-card">
+          <div class="biz-card-front">
+            <img src="images/logo-original.png" alt="Legarreta Automotores">
+            <div class="biz-tagline">Compra · Venta · Financiación</div>
+          </div>
+          <div class="biz-card-accent"></div>
+        </div>
+      </div>
+      <!-- Back -->
+      <div>
+        <p style="font-size:.6rem;color:var(--gray3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem;">Reverso</p>
+        <div class="biz-card">
+          <div class="biz-card-back">
+            <div class="biz-name">Santiago Legarreta</div>
+            <div class="biz-role">Responsable Comercial</div>
+            <div class="biz-contact">
+              +54 2494 585374<br>
+              Tandil, Buenos Aires<br>
+              legarretaautomotores.com.ar
+            </div>
+          </div>
+          <div class="biz-card-accent"></div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:.75rem;color:var(--gray3);margin-top:.5rem;">El nombre del responsable y cargo se adaptan por persona. El diseño estructural permanece idéntico.</p>
+
+    <!-- Signage -->
+    <div class="label-row" style="margin-top:3rem;">Cartelería y letrero</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;">
+      <div style="padding:1.5rem;background:var(--gray6);border-left:3px solid var(--accent);">
+        <strong style="font-size:.8rem;display:block;margin-bottom:.5rem;">Letrero principal</strong>
+        <p style="font-size:.75rem;color:var(--gray3);line-height:1.7;">Fondo negro, logo en vinilo blanco. Mínimo 1.5m de ancho. Zona libre alrededor del logo = 15% del ancho total del letrero.</p>
+      </div>
+      <div style="padding:1.5rem;background:var(--gray6);border-left:3px solid var(--accent);">
+        <strong style="font-size:.8rem;display:block;margin-bottom:.5rem;">Cartel de vehículo</strong>
+        <p style="font-size:.75rem;color:var(--gray3);line-height:1.7;">A4 horizontal. Fondo negro. Datos en Inter, precio en Bebas Neue con dorado. Logo pequeño en esquina inferior derecha.</p>
+      </div>
+      <div style="padding:1.5rem;background:var(--gray6);border-left:3px solid var(--accent);">
+        <strong style="font-size:.8rem;display:block;margin-bottom:.5rem;">Banners digitales</strong>
+        <p style="font-size:.75rem;color:var(--gray3);line-height:1.7;">1080×1920px (story), 1080×1080px (feed), 1200×628px (Facebook/web). Siempre con logo en esquina y tagline visible.</p>
+      </div>
+    </div>
+
+    <!-- Uniform -->
+    <div class="label-row">Uniforme / Remera</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;">
+      <div style="padding:1.5rem;background:var(--gray6);">
+        <strong style="font-size:.8rem;display:block;margin-bottom:.5rem;">Polo o remera</strong>
+        <p style="font-size:.75rem;color:var(--gray3);line-height:1.7;">Color base: negro. Logo bordado en blanco en pecho izquierdo. Tamaño bordado: 8cm de ancho. Sin más elementos gráficos.</p>
+      </div>
+      <div style="padding:1.5rem;background:var(--gray6);">
+        <strong style="font-size:.8rem;display:block;margin-bottom:.5rem;">Campera</strong>
+        <p style="font-size:.75rem;color:var(--gray3);line-height:1.7;">Bomber o rompeviento negro. Logo en espalda (20cm) + monograma LA en pecho. Sin colores adicionales.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 09 CONTACTO ─────────────────────────────────────────────────── -->
+<section id="contacto" class="dark">
+  <div class="section-bg-num">09</div>
+  <div class="section-inner">
+    <div class="section-eyebrow">Contacto y Recursos</div>
+    <h2 class="section-title">Archivos y responsables</h2>
+    <p class="section-desc">Toda solicitud de uso del logo o adaptación de la marca debe pasar por el responsable designado. Los archivos originales no se comparten libremente — se entregan versiones aprobadas según el caso de uso.</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="cc-label">WhatsApp</div>
+        <div class="cc-value">+54 2494 585374</div>
+        <div class="cc-sub">Canal principal de contacto</div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-label">Ubicación</div>
+        <div class="cc-value">Tandil<br>Buenos Aires, Argentina</div>
+        <div class="cc-sub">Consultar dirección exacta</div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-label">Sitio web</div>
+        <div class="cc-value">legarretaautomotores<br>.com.ar</div>
+        <div class="cc-sub">Catálogo + contacto online</div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-label">Manual de marca</div>
+        <div class="cc-value">Versión 1.0</div>
+        <div class="cc-sub">2025 — sujeto a revisión anual</div>
+      </div>
+    </div>
+
+    <div class="label-row">Archivos de marca disponibles</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:3rem;">
+      <div style="padding:1.25rem;background:var(--gray2);display:flex;align-items:center;gap:1rem;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+        </svg>
+        <div>
+          <div style="font-size:.8rem;color:var(--white);font-weight:600;">Logo SVG</div>
+          <div style="font-size:.65rem;color:var(--gray4);">Negro, blanco, color</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem;background:var(--gray2);display:flex;align-items:center;gap:1rem;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+        </svg>
+        <div>
+          <div style="font-size:.8rem;color:var(--white);font-weight:600;">Logo PNG</div>
+          <div style="font-size:.65rem;color:var(--gray4);">300dpi, fondo transparente</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem;background:var(--gray2);display:flex;align-items:center;gap:1rem;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+        </svg>
+        <div>
+          <div style="font-size:.8rem;color:var(--white);font-weight:600;">Guía de tipografía</div>
+          <div style="font-size:.65rem;color:var(--gray4);">Links Google Fonts + config</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem;background:var(--gray2);display:flex;align-items:center;gap:1rem;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+        </svg>
+        <div>
+          <div style="font-size:.8rem;color:var(--white);font-weight:600;">Paleta de colores</div>
+          <div style="font-size:.65rem;color:var(--gray4);">ASE, JSON, HEX</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer statement -->
+    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:3rem;text-align:center;">
+      <img src="images/logo-original.png" alt="Legarreta Automotores" style="height:40px;filter:brightness(0) invert(1);margin:0 auto 2rem;">
+      <p style="font-size:.75rem;color:var(--gray3);line-height:1.75;max-width:480px;margin:0 auto 1rem;">
+        Este manual de marca es un documento vivo. Se revisa y actualiza anualmente o ante cambios estratégicos significativos. La coherencia de marca es responsabilidad de todos los que la representan.
+      </p>
+      <p style="font-size:.65rem;color:var(--gray3);letter-spacing:.15em;text-transform:uppercase;">
+        Manual de Marca · Legarreta Automotores · Versión 1.0 · 2025
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Sidebar active state on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

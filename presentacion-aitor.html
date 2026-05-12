@@ -42,7 +42,7 @@ nav img{height:34px;filter:brightness(0) invert(1);}
 }
 .cover-img{
   position:absolute;inset:0;
-  background:url('images/hero-truck.jpg') center center/cover no-repeat;
+  background:url('images/hero-truck-raw.jpg') center center/cover no-repeat;
   filter:grayscale(60%) brightness(.32);
   transform:scale(1.04);
 }
@@ -338,6 +338,125 @@ footer p{font-size:.62rem;color:rgba(255,255,255,.18);letter-spacing:.1em;}
   .stats-row{grid-template-columns:1fr 1fr;}
   .impacto-item{grid-template-columns:1fr;}
   .feat-copy{padding:2.5rem;}
+}
+
+/* ══ PRINT / PDF ══ */
+@media print{
+  @page{size:A4 landscape;margin:0;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  html,body{height:auto;overflow:visible;background:#000;}
+
+  nav,.cover-scroll,footer,.cierre-btns{display:none!important;}
+
+  /* cada section = una página */
+  section{
+    page-break-after:always;break-after:page;
+    page-break-inside:avoid;break-inside:avoid;
+    height:210mm;overflow:hidden;
+    box-sizing:border-box;
+  }
+
+  /* ── cover: fondo negro puro, foto a un lado ── */
+  #cover{
+    background:#000;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:end;
+    padding:0;
+  }
+  .cover-img{
+    position:relative;inset:auto;
+    grid-column:2;
+    height:210mm;
+    transform:none;
+    background:url('images/hero-truck-raw.jpg') center center/cover no-repeat;
+    filter:grayscale(40%) brightness(.7);
+  }
+  .cover-content{
+    grid-column:1;grid-row:1;
+    padding:14mm 10mm 14mm 16mm;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    height:210mm;
+  }
+  .cover-h1{font-size:5.5rem;line-height:.82;}
+  .cover-sub{font-size:.75rem;max-width:280px;}
+
+  /* ── intro + stats en una sola página ── */
+  #intro{
+    height:auto;padding:10mm 16mm;
+    display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
+  }
+  #stats{height:auto;page-break-after:avoid;break-after:avoid;}
+  #intro,#stats{
+    display:block;
+  }
+  /* agrupar intro+stats */
+  #intro{
+    display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
+    padding-bottom:0;
+  }
+  .stats-row{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    padding:6mm 16mm;
+  }
+  .stat{padding:6mm 8mm;}
+  .stat-n{font-size:3rem;}
+  .intro-h2{font-size:2.8rem;}
+  .intro-right p{font-size:.78rem;}
+
+  /* ── features: 2 por página ── */
+  #features{height:auto;}
+  .feat-header{padding:8mm 16mm 4mm;page-break-after:avoid;break-after:avoid;}
+  .feat-header h2{font-size:3.5rem;}
+  .feature{
+    min-height:auto;
+    page-break-inside:avoid;break-inside:avoid;
+  }
+  /* par/impar: agrupar de a 2 */
+  .feature:nth-child(2){page-break-after:avoid;break-after:avoid;}
+  .feature:nth-child(4){page-break-after:avoid;break-after:avoid;}
+  .feat-copy{padding:6mm 10mm;}
+  .feat-title{font-size:1.8rem;}
+  .feat-desc{font-size:.72rem;}
+  .feat-num{font-size:5rem;}
+
+  /* ── impacto ── */
+  #impacto{padding:8mm 16mm;display:flex;flex-direction:column;justify-content:center;}
+  .impacto-header{margin-bottom:4mm;}
+  .impacto-header h2{font-size:2.5rem;}
+  .impacto-item{padding:4mm 0;gap:2rem;grid-template-columns:100px 1fr;}
+  .impacto-n{font-size:2.5rem;}
+  .impacto-body h3{font-size:.82rem;}
+  .impacto-body p{font-size:.68rem;line-height:1.7;}
+
+  /* ── estado ── */
+  #estado{padding:8mm 16mm;display:flex;flex-direction:column;justify-content:center;}
+  .estado-header{margin-bottom:4mm;}
+  .estado-header h2{font-size:2.5rem;}
+  .estado-row{padding:3mm 0;}
+  .estado-title{font-size:.8rem;}
+  .estado-desc{font-size:.68rem;}
+
+  /* ── pasos ── */
+  #pasos{padding:8mm 16mm;display:flex;flex-direction:column;justify-content:center;}
+  .pasos-header{margin-bottom:4mm;}
+  .pasos-header h2{font-size:2.5rem;}
+  .paso{padding:3mm 0;}
+  .paso-title{font-size:.8rem;}
+  .paso-desc{font-size:.68rem;}
+  .paso-badge{display:none;}
+
+  /* ── cierre ── */
+  #cierre{
+    background:#000;
+    display:flex;flex-direction:column;
+    justify-content:center;align-items:flex-start;
+    padding:0 16mm;
+    page-break-after:avoid;
+  }
+  .cierre-h2{font-size:5.5rem;line-height:.84;}
+  .cierre-sub{font-size:.78rem;}
+  .cierre-bg{font-size:18rem;color:rgba(255,255,255,.03);}
 }
 </style>
 </head>

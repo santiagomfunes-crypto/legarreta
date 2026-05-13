@@ -43,7 +43,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .mob-x{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--gray);font-size:1.6rem;cursor:pointer;}
 .hero{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5% 6rem;}
 .hero-img{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat;filter:grayscale(40%) contrast(1.25) brightness(.9);animation:hzoom 24s ease-in-out infinite alternate;overflow:hidden;}
-.hero-img canvas{position:absolute;inset:0;width:100%!important;height:100%!important;mix-blend-mode:screen;opacity:.45;}
+.hero-img canvas{position:absolute;inset:0;width:100%!important;height:100%!important;mix-blend-mode:screen;opacity:.45;pointer-events:none;}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,.05) 55%,rgba(0,0,0,.9) 100%),linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 65%);}
 @keyframes hzoom{from{transform:scale(1.02)}to{transform:scale(1.08)}}
 .hero-content{position:relative;z-index:2;max-width:850px;}
@@ -122,7 +122,7 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 .fsubmit{width:100%;background:var(--white);color:var(--black);padding:.88rem;border:none;font-size:.7rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .25s;margin-top:.5rem;letter-spacing:.16em;text-transform:uppercase;}
 .fsubmit:hover{background:var(--off);}
-.wa-float{position:fixed;bottom:2rem;right:2rem;z-index:900;width:54px;height:54px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:white;box-shadow:0 8px 28px rgba(37,211,102,.35);transition:all .25s;animation:popIn .5s ease 2s both;}
+.wa-float{position:fixed;bottom:2rem;right:2rem;z-index:1100;width:54px;height:54px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:white;box-shadow:0 8px 28px rgba(37,211,102,.35);transition:all .25s;animation:popIn .5s ease 2s both;border:none;cursor:pointer;}
 .wa-float:hover{transform:scale(1.1);}
 @keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
 footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem 5%;}
@@ -146,6 +146,15 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
 @media(max-width:768px){.nav-links,.nav-cta{display:none;}.nav-burger{display:block;}.frow{grid-template-columns:1fr;}.foot{flex-direction:column;text-align:center;}.foot-links{justify-content:center;}.hero{padding:0 6% 4rem;}.hero-sub{font-size:.88rem;max-width:100%;}.hero-btns{flex-direction:column;}.btn-white,.btn-border{text-align:center;}}
 @media(max-width:768px){.hero-img{background-position:30% top!important;}}
 @media(max-width:540px){.featured-grid{grid-template-columns:1fr;}.hero-img{background-position:25% top!important;}.stats{grid-template-columns:repeat(2,1fr);}.pickup-img{background-position:70% 65%!important;}}
+
+/* ── WA Multi-contacto ── */
+.wa-panel{position:fixed;bottom:6rem;right:1.5rem;z-index:1100;display:flex;flex-direction:column;gap:.5rem;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s,transform .25s;}
+.wa-panel.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.wa-contact{display:flex;align-items:center;gap:.75rem;background:#fff;color:#000;padding:.65rem 1rem .65rem .75rem;font-size:.78rem;font-weight:600;letter-spacing:.04em;text-decoration:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.35);transition:background .18s;}
+.wa-contact:hover{background:#f0f0f0;}
+.wa-contact-avatar{width:34px;height:34px;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;flex-shrink:0;}
+.wa-contact-info{display:flex;flex-direction:column;line-height:1.2;}
+.wa-contact-role{font-size:.6rem;color:#737373;font-weight:400;letter-spacing:.08em;text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -168,10 +177,10 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
     <li><a href="catalogo.html">Catálogo</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
-  <a id="navWa" href="#" class="nav-cta" target="_blank">
+  <button id="navWa" class="nav-cta" onclick="event.stopPropagation();abrirWA('Hola Legarreta, quiero consultar por un vehículo.')">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
     Consultar
-  </a>
+  </button>
   <button class="nav-burger" id="burger">&#9776;</button>
 </nav>
 
@@ -307,9 +316,25 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
   </div>
 </footer>
 
-<a class="wa-float" id="waFloat" href="#" target="_blank">
+<!-- Panel multi-contacto -->
+<div class="wa-panel" id="waPanel">
+  <a class="wa-contact" id="waAitor" href="#" target="_blank">
+    <div class="wa-contact-avatar">AL</div>
+    <div class="wa-contact-info"><span>Aitor</span></div>
+  </a>
+  <a class="wa-contact" id="waJavier" href="https://wa.me/5492494586516" target="_blank">
+    <div class="wa-contact-avatar">JV</div>
+    <div class="wa-contact-info"><span>Javier</span></div>
+  </a>
+  <a class="wa-contact" id="waJeronimo" href="https://wa.me/5491133438645" target="_blank">
+    <div class="wa-contact-avatar">JR</div>
+    <div class="wa-contact-info"><span>Jerónimo</span></div>
+  </a>
+</div>
+
+<button class="wa-float" id="waFloat" aria-label="Contactar por WhatsApp">
   <svg width="25" height="25" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-</a>
+</button>
 
 <script>
 /* ═══════════════════════════════════════════════════════
@@ -395,7 +420,7 @@ document.getElementById('heroImg').style.backgroundImage = 'url("' + CONFIG.hero
 document.getElementById('heroImg').style.backgroundPosition = CONFIG.heroImgPos;
 
 // Hero — Shader Animation (Three.js WebGL)
-(function(){
+try{ (function(){
   var container = document.getElementById('heroImg');
   var camera = new THREE.Camera();
   camera.position.z = 1;
@@ -441,7 +466,7 @@ document.getElementById('heroImg').style.backgroundPosition = CONFIG.heroImgPos;
     uniforms.time.value += 0.05;
     renderer.render(scene, camera);
   })();
-})();
+})(); } catch(e){ console.warn('Shader error:', e); }
 
 document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
 document.getElementById('heroTitle').textContent   = CONFIG.heroTitle;
@@ -454,8 +479,9 @@ document.getElementById('statsGrid').innerHTML = CONFIG.stats.map(function(s) {
 
 // Vehículos destacados
 document.getElementById('featGrid').innerHTML = CONFIG.featured.map(function(c) {
-  var cardWa = wa('Hola Legarreta, me interesa el ' + c.marca + ' ' + c.modelo + '. ¿Tienen disponibilidad?');
-  return '<div class="feat-card" onclick="window.open(\'' + cardWa + '\',\'_blank\')">' +
+  var msg = 'Hola Legarreta, me interesa el ' + c.marca + ' ' + c.modelo + '. ¿Tienen disponibilidad?';
+  var msgEnc = encodeURIComponent(msg).replace(/'/g, '%27');
+  return '<div class="feat-card" onclick="event.stopPropagation();abrirWA(\'' + msg.replace(/'/g,"\\'") + '\')">' +
     '<div class="feat-img-wrap">' +
       '<img src="' + c.img + '" alt="' + c.marca + ' ' + c.modelo + '" loading="lazy" decoding="async" style="object-position:' + c.pos + '">' +
       '<div class="feat-tag">' + c.tipo + '</div>' +
@@ -465,7 +491,7 @@ document.getElementById('featGrid').innerHTML = CONFIG.featured.map(function(c) 
       '<div class="feat-modelo">' + c.modelo + '</div>' +
       '<div class="feat-sep"></div>' +
       '<div class="feat-foot">' +
-        '<a class="feat-consultar" href="' + wa('Hola Legarreta, me interesa el ' + c.marca + ' ' + c.modelo + '. ¿Tienen disponibilidad?') + '" target="_blank">Consultar&nbsp;' + ARR + '</a>' +
+        '<span class="feat-consultar" style="cursor:pointer">Consultar&nbsp;' + ARR + '</span>' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -491,9 +517,8 @@ document.getElementById('finList').innerHTML = CONFIG.financing.map(function(f) 
 // Contacto
 var waNavUrl    = wa('Hola Legarreta, quiero consultar por un vehículo.');
 var waContactUrl = wa('Hola Legarreta, vi el catálogo y quiero consultar.');
-document.getElementById('navWa').href        = waNavUrl;
-document.getElementById('waCtaBtn').href     = waContactUrl;
-document.getElementById('waFloat').href      = wa('');
+document.getElementById('waCtaBtn').href     = '#';
+document.getElementById('waCtaBtn').onclick  = function(e){ e.preventDefault(); abrirWA('Hola Legarreta, vi el catálogo y quiero consultar.'); };
 document.getElementById('contactAddress').textContent = CONFIG.address;
 document.getElementById('contactHours').textContent   = CONFIG.hours;
 
@@ -525,24 +550,58 @@ fetch(_SUPA + '/rest/v1/vehiculos_legarreta?select=id&activo=eq.true', {
   }
 }).catch(function(){});
 
-// ── WhatsApp flotante contextual ──────────────────────────────────────────
-var _waFloat = document.getElementById('waFloat');
+// ── WhatsApp — panel multi-contacto ──────────────────────────────────────
+var _waBtn      = document.getElementById('waFloat');
+var _waPanel    = document.getElementById('waPanel');
+var _waAitor    = document.getElementById('waAitor');
+var _waJavier   = document.getElementById('waJavier');
+var _waJeronimo = document.getElementById('waJeronimo');
+var _panelOpen  = false;
+
+function abrirWA(msg) {
+  msg = msg || 'Hola Legarreta, quiero consultar por un vehículo.';
+  var enc = encodeURIComponent(msg);
+  var aitor    = document.getElementById('waAitor');
+  var javier   = document.getElementById('waJavier');
+  var jeronimo = document.getElementById('waJeronimo');
+  var panel    = document.getElementById('waPanel');
+  if(aitor)    aitor.href    = 'https://wa.me/542494585374?text=' + enc;
+  if(javier)   javier.href   = 'https://wa.me/5492494586516?text=' + enc;
+  if(jeronimo) jeronimo.href = 'https://wa.me/5491133438645?text=' + enc;
+  if(panel)    panel.classList.add('open');
+  _panelOpen = true;
+}
+
+_waBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  if(_panelOpen) {
+    _panelOpen = false;
+    _waPanel.classList.remove('open');
+  } else {
+    abrirWA(_currentMsg);
+  }
+});
+document.addEventListener('click', function(e) {
+  if(_panelOpen && !_waPanel.contains(e.target) && !_waBtn.contains(e.target)) {
+    _panelOpen = false;
+    _waPanel.classList.remove('open');
+  }
+});
+
 var _waMsgs = {
   'inicio':     'Hola Legarreta, entré al sitio y quiero consultar por un vehículo.',
   'destacados': 'Hola Legarreta, vi los vehículos destacados y me interesa consultar.',
   'clientes':   'Hola Legarreta, vi las reseñas y quiero consultar por un vehículo.',
   'contacto':   'Hola Legarreta, quiero coordinar una visita al local.',
 };
-(new IntersectionObserver(function(entries) {
-  entries.forEach(function(entry) {
-    if(entry.isIntersecting) _waFloat.href = wa(_waMsgs[entry.target.id] || _waMsgs['inicio']);
-  });
-}, { threshold: 0.3 })).observe ? ['inicio','destacados','clientes','contacto'].forEach(function(id) {
+var _currentMsg = _waMsgs['inicio'];
+
+['inicio','destacados','clientes','contacto'].forEach(function(id) {
   var el = document.getElementById(id);
-  if(el) (new IntersectionObserver(function(entries) {
-    entries.forEach(function(e){ if(e.isIntersecting) _waFloat.href = wa(_waMsgs[id]); });
+  if(el)(new IntersectionObserver(function(entries) {
+    entries.forEach(function(e){ if(e.isIntersecting) _currentMsg = _waMsgs[id]; });
   }, { threshold: 0.3 })).observe(el);
-}) : null;
+});
 
 // ── Interacciones ──────────────────────────────────────────────────────────
 

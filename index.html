@@ -12,6 +12,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.rel='stylesheet'">
@@ -41,7 +42,8 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);o
 .mob a:hover{color:var(--gray);}
 .mob-x{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--gray);font-size:1.6rem;cursor:pointer;}
 .hero{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5% 6rem;}
-.hero-img{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat;filter:grayscale(40%) contrast(1.25) brightness(.9);animation:hzoom 24s ease-in-out infinite alternate;}
+.hero-img{position:absolute;inset:0;background-size:cover;background-repeat:no-repeat;filter:grayscale(40%) contrast(1.25) brightness(.9);animation:hzoom 24s ease-in-out infinite alternate;overflow:hidden;}
+.hero-img canvas{position:absolute;inset:0;width:100%!important;height:100%!important;mix-blend-mode:screen;opacity:.45;}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,.05) 55%,rgba(0,0,0,.9) 100%),linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,0) 65%);}
 @keyframes hzoom{from{transform:scale(1.02)}to{transform:scale(1.08)}}
 .hero-content{position:relative;z-index:2;max-width:850px;}
@@ -388,9 +390,59 @@ const _fbIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" str
 
 // ── Aplicar CONFIG al DOM ──────────────────────────────────────────────────
 
-// Hero
-document.getElementById('heroImg').style.cssText =
-  'background-image:url("' + CONFIG.heroImg + '");background-position:' + CONFIG.heroImgPos + ';';
+// Hero — imagen de fondo
+document.getElementById('heroImg').style.backgroundImage = 'url("' + CONFIG.heroImg + '")';
+document.getElementById('heroImg').style.backgroundPosition = CONFIG.heroImgPos;
+
+// Hero — Shader Animation (Three.js WebGL)
+(function(){
+  var container = document.getElementById('heroImg');
+  var camera = new THREE.Camera();
+  camera.position.z = 1;
+  var scene = new THREE.Scene();
+  var geometry = new THREE.PlaneGeometry(2, 2);
+  var uniforms = {
+    time:       { value: 1.0 },
+    resolution: { value: new THREE.Vector2() }
+  };
+  var material = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: 'void main(){gl_Position=vec4(position,1.0);}',
+    fragmentShader: [
+      'precision highp float;',
+      'uniform vec2 resolution;',
+      'uniform float time;',
+      'void main(void){',
+      '  vec2 uv=(gl_FragCoord.xy*2.0-resolution.xy)/min(resolution.x,resolution.y);',
+      '  float t=time*0.038;',
+      '  float lw=0.0022;',
+      '  float b=0.0;',
+      '  for(int i=0;i<6;i++){',
+      '    float fi=float(i);',
+      '    b+=lw*fi*fi/abs(fract(t+fi*0.013)*5.0-length(uv)+mod(uv.x+uv.y,0.2));',
+      '  }',
+      '  gl_FragColor=vec4(b,b*0.93,b*0.84,1.0);',
+      '}'
+    ].join('\n')
+  });
+  scene.add(new THREE.Mesh(geometry, material));
+  var renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+  function resize(){
+    var w = container.clientWidth, h = container.clientHeight;
+    renderer.setSize(w, h);
+    uniforms.resolution.value.set(renderer.domElement.width, renderer.domElement.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  (function animate(){
+    requestAnimationFrame(animate);
+    uniforms.time.value += 0.05;
+    renderer.render(scene, camera);
+  })();
+})();
+
 document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
 document.getElementById('heroTitle').textContent   = CONFIG.heroTitle;
 document.getElementById('heroSub').textContent     = CONFIG.heroSub;

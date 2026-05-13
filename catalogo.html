@@ -187,6 +187,13 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
 .cmp-car-img{width:100%;height:130px;object-fit:cover;display:block;margin-bottom:.5rem;}
 .cmp-car-noimg{width:100%;height:130px;background:var(--b2);margin-bottom:.5rem;}
 .cmp-wa-btn{display:inline-flex;align-items:center;gap:.4rem;background:#25d366;color:#000;padding:.5rem 1rem;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;margin-top:.3rem;}
+/* ── Paginación ── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:2.5rem 0 1rem;}
+.pg-btn{background:none;border:1px solid var(--b2);color:var(--gray);width:38px;height:38px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;}
+.pg-btn:hover:not(:disabled){border-color:var(--white);color:var(--white);}
+.pg-btn.active{background:var(--white);color:var(--black);border-color:var(--white);}
+.pg-btn:disabled{opacity:.25;cursor:not-allowed;}
+.pg-ellipsis{color:var(--gray);font-size:.75rem;padding:0 .2rem;}
 /* ── Fullscreen gallery ── */
 .fs-ov{display:none;position:fixed;inset:0;z-index:4000;background:#000;align-items:center;justify-content:center;}
 .fs-ov.open{display:flex;}
@@ -262,6 +269,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2.5rem
   </div>
   <div class="rcount" id="rcount"></div>
   <div class="cars-grid" id="grid"></div>
+  <div class="pagination" id="pagination"></div>
 </section>
 
 <footer>
@@ -390,6 +398,8 @@ const SUPA='https://pgnmpxqljxrpnvexcygh.supabase.co';
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
 let CARS_DB=[];
 let S={cat:'all',marca:'',km:'',precio:'',q:''};
+const PAGE_SIZE=12;
+let currentPage=1;
 const iArr='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 
 function mapSupa(v){
@@ -421,17 +431,17 @@ async function init(){
   // 1. Registrar event listeners de inmediato (no dependen de los datos)
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');S.cat=b.dataset.cat;render();
+    b.classList.add('active');S.cat=b.dataset.cat;currentPage=1;render();
   }));
-  document.getElementById('fM').addEventListener('change',e=>{S.marca=e.target.value;render();});
-  document.getElementById('fK').addEventListener('change',e=>{S.km=e.target.value;render();});
+  document.getElementById('fM').addEventListener('change',e=>{S.marca=e.target.value;currentPage=1;render();});
+  document.getElementById('fK').addEventListener('change',e=>{S.km=e.target.value;currentPage=1;render();});
   document.getElementById('fP').addEventListener('input', function(e) {
     S.precio = parseInt(e.target.value);
     var label = S.precio >= 80000 ? 'Sin límite' : 'Hasta USD ' + S.precio.toLocaleString('es-AR');
     document.getElementById('fPLabel').textContent = label;
-    render();
+    currentPage=1;render();
   });
-  document.getElementById('fQ').addEventListener('input',e=>{S.q=e.target.value.toLowerCase();render();});
+  document.getElementById('fQ').addEventListener('input',e=>{S.q=e.target.value.toLowerCase();currentPage=1;render();});
   document.getElementById('fReset').addEventListener('click',reset);
   document.getElementById('burger').addEventListener('click',()=>document.getElementById('mob').classList.add('open'));
   document.getElementById('mobX').addEventListener('click',closeMob);
@@ -489,6 +499,7 @@ function buildFilters(){
 function closeMob(){document.getElementById('mob').classList.remove('open');}
 function reset(){
   S={cat:'all',marca:'',km:'',precio:'',q:''};
+  currentPage=1;
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.querySelector('[data-cat="all"]').classList.add('active');
   ['fM','fK','fQ'].forEach(id=>document.getElementById(id).value='');
@@ -507,12 +518,20 @@ function getFiltered(){
   });
 }
 function render(){
-  const cars=getFiltered();
-  document.getElementById('rcount').innerHTML=`<strong>${cars.length}</strong> vehículos`;
-  if(!cars.length){document.getElementById('grid').innerHTML=`<div class="empty"><p>Sin resultados para ese filtro.</p></div>`;return;}
-  document.getElementById('grid').innerHTML=cars.map(c=>`
+  const all=getFiltered();
+  const total=all.length;
+  const totalPages=Math.ceil(total/PAGE_SIZE)||1;
+  if(currentPage>totalPages) currentPage=totalPages;
+  const cars=all.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+  document.getElementById('rcount').innerHTML=`<strong>${total}</strong> vehículos`;
+  if(!total){
+    document.getElementById('grid').innerHTML=`<div class="empty"><p>Sin resultados para ese filtro.</p></div>`;
+    document.getElementById('pagination').innerHTML='';
+    return;
+  }
+  document.getElementById('grid').innerHTML=cars.map((c,i)=>`
     <div class="car-card" onclick="openModal('${c.id}')">
-      <div class="card-img" style="position:relative;">${(c.reservado ? '<div class="car-badge badge-reservado">Reservado</div>' : (c.nuevo ? '<div class="car-badge badge-nuevo">Nuevo ingreso</div>' : ''))}${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" width="400" height="200">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}<button class="cmp-btn" data-id="${c.id}" onclick="toggleCompare('${c.id}',event)">+ Comparar</button></div>
+      <div class="card-img" style="position:relative;">${(c.reservado ? '<div class="car-badge badge-reservado">Reservado</div>' : (c.nuevo ? '<div class="car-badge badge-nuevo">Nuevo ingreso</div>' : ''))}${c.img?`<img src="${c.img}" alt="${c.marca} ${c.modelo}" width="400" height="200" loading="${i<6?'eager':'lazy'}">`:`<div class="card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 6l1.5-2h3L15 6"/></svg></div>`}<button class="cmp-btn" data-id="${c.id}" onclick="toggleCompare('${c.id}',event)">+ Comparar</button></div>
       <div class="card-body">
         <div class="card-cat">${c.cat}</div>
         <div class="card-marca">${c.marca}</div>
@@ -525,6 +544,36 @@ function render(){
         </div>
       </div>
     </div>`).join('');
+  refreshCmpBtns();
+  renderPagination(totalPages);
+}
+
+function goToPage(p){
+  currentPage=p;
+  window.scrollTo({top:document.querySelector('.catalog').offsetTop-80,behavior:'smooth'});
+  render();
+}
+
+function renderPagination(totalPages){
+  if(totalPages<=1){document.getElementById('pagination').innerHTML='';return;}
+  const p=currentPage;
+  let html='';
+  html+=`<button class="pg-btn" onclick="goToPage(${p-1})" ${p===1?'disabled':''}>&#8249;</button>`;
+  const pages=[];
+  if(totalPages<=7){for(let i=1;i<=totalPages;i++) pages.push(i);}
+  else {
+    pages.push(1);
+    if(p>3) pages.push('…');
+    for(let i=Math.max(2,p-1);i<=Math.min(totalPages-1,p+1);i++) pages.push(i);
+    if(p<totalPages-2) pages.push('…');
+    pages.push(totalPages);
+  }
+  pages.forEach(pg=>{
+    if(pg==='…') html+=`<span class="pg-ellipsis">…</span>`;
+    else html+=`<button class="pg-btn${pg===p?' active':''}" onclick="goToPage(${pg})">${pg}</button>`;
+  });
+  html+=`<button class="pg-btn" onclick="goToPage(${p+1})" ${p===totalPages?'disabled':''}>&#8250;</button>`;
+  document.getElementById('pagination').innerHTML=html;
 }
 init();
 

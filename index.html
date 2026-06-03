@@ -23,17 +23,17 @@ html{scroll-behavior:smooth;}
 body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;line-height:1.6;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--black);}::-webkit-scrollbar-thumb{background:var(--white);}
 ::selection{background:var(--white);color:var(--black);}
-.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.4rem 5%;display:flex;align-items:center;justify-content:space-between;transition:all .35s;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:.4rem 5%;display:flex;align-items:center;justify-content:space-between;transition:all .35s;}
 .nav.scrolled{background:rgba(0,0,0,.96);backdrop-filter:blur(24px);padding:1rem 5%;border-bottom:1px solid var(--border);}
 .nav-logo{display:flex;align-items:center;text-decoration:none;}
-.nav-logo img{height:62px;width:auto;filter:brightness(0) invert(1);}
+.nav-logo img{height:120px;width:auto;filter:brightness(0) invert(1);}
 .nav-links{display:flex;gap:2.5rem;list-style:none;}
-.nav-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;transition:color .2s;position:relative;}
+.nav-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:1.44rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;transition:color .2s;position:relative;}
 .nav-links a::after{content:'';position:absolute;bottom:-.3rem;left:0;width:0;height:1px;background:var(--white);transition:width .3s;}
 .nav-links a:hover{color:var(--white);}
 .nav-links a:hover::after{width:100%;}
-.nav-cta{display:flex;align-items:center;gap:.4rem;border:1px solid rgba(255,255,255,.3);color:var(--white);padding:.58rem 1.3rem;font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:all .25s;}
-.nav-cta:hover{background:var(--white);color:var(--black);}
+.nav-cta{display:flex;align-items:center;gap:.4rem;background:#25d366;border:1px solid #25d366;color:#000;padding:.58rem 1.3rem;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:all .25s;cursor:pointer;font-family:'Inter',sans-serif;}
+.nav-cta:hover{background:#1ebe5d;border-color:#1ebe5d;}
 .nav-burger{display:none;background:none;border:none;color:var(--white);font-size:1.4rem;cursor:pointer;}
 .mob{display:none;flex-direction:column;position:fixed;inset:0;z-index:999;background:var(--black);align-items:center;justify-content:center;gap:3rem;}
 .mob.open{display:flex;}
@@ -346,9 +346,9 @@ const CONFIG = {
   hours    : 'Lun – Vie: 9 a 13 / 15 a 19 · Sáb: 9 a 13',
 
   // ── Hero ──────────────────────────────────────────────
-  heroImg    : 'images/hero-donut-truck.jpg',
-  heroImgPos : 'center center',
-  heroEyebrow: 'Tandil · Buenos Aires',
+  heroImg    : 'images/hero-gemini.jpg',
+  heroImgPos : 'center top',
+  heroEyebrow: '',
   heroTitle  : 'LEGARRETA',
   heroSub    : 'Pick-ups de alto impacto. Seleccionados, financiados en dólares.',
 
@@ -418,7 +418,9 @@ document.getElementById('heroImg').style.backgroundImage = 'url("' + CONFIG.hero
 document.getElementById('heroImg').style.backgroundPosition = CONFIG.heroImgPos;
 
 
-document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
+var _eyebrow = document.getElementById('heroEyebrow');
+_eyebrow.textContent = CONFIG.heroEyebrow;
+if(!CONFIG.heroEyebrow) _eyebrow.closest('.hero-eyebrow').style.display='none';
 document.getElementById('heroTitle').textContent   = CONFIG.heroTitle;
 document.getElementById('heroSub').textContent     = CONFIG.heroSub;
 

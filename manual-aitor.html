@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de uso — Legarreta Automotores</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#fff;color:#111;line-height:1.6;font-size:15px;}
+
+/* ── COVER ── */
+.cover{background:#000;color:#fff;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;page-break-after:always;break-after:page;}
+.cover-left{padding:4rem;display:flex;flex-direction:column;justify-content:space-between;}
+.cover-logo{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:.04em;line-height:1;}
+.cover-logo span{display:block;font-family:'Inter',sans-serif;font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:.4rem;font-weight:400;}
+.cover-title{margin-top:auto;}
+.cover-title h1{font-family:'Bebas Neue',sans-serif;font-size:5.5rem;line-height:.9;letter-spacing:.02em;}
+.cover-title p{color:rgba(255,255,255,.55);font-size:.9rem;margin-top:1.5rem;font-weight:300;max-width:340px;line-height:1.7;}
+.cover-date{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.18em;text-transform:uppercase;margin-top:3rem;}
+.cover-right{background:#111;display:flex;align-items:center;justify-content:center;}
+.cover-monogram{font-family:'Bebas Neue',sans-serif;font-size:14rem;color:rgba(255,255,255,.04);line-height:1;user-select:none;}
+
+/* ── PAGES ── */
+.page{padding:3.5rem 4rem;min-height:100vh;page-break-after:always;break-after:page;position:relative;}
+.page:last-child{page-break-after:auto;break-after:auto;}
+.page-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1.2rem;border-bottom:2px solid #000;margin-bottom:2.5rem;}
+.page-eyebrow{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:#888;font-weight:500;}
+.page-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:#f0f0f0;line-height:1;}
+h2{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:.95;margin-bottom:1.8rem;letter-spacing:.02em;}
+h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.04em;margin-bottom:.8rem;margin-top:2rem;}
+h3:first-of-type{margin-top:0;}
+p{color:#444;font-size:.9rem;line-height:1.75;margin-bottom:1rem;}
+.lead{font-size:1.05rem;color:#222;font-weight:400;line-height:1.65;margin-bottom:2rem;}
+
+/* ── STEP CARDS ── */
+.steps{display:flex;flex-direction:column;gap:.8rem;margin:1.2rem 0;}
+.step{display:flex;gap:1.2rem;align-items:flex-start;padding:1.2rem 1.4rem;border:1px solid #e8e8e8;background:#fafafa;}
+.step-num{width:32px;height:32px;background:#000;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
+.step-body strong{display:block;font-size:.88rem;font-weight:700;margin-bottom:.3rem;color:#111;}
+.step-body span{font-size:.82rem;color:#666;line-height:1.55;}
+
+/* ── INFO BOXES ── */
+.box{padding:1.2rem 1.5rem;margin:1.2rem 0;border-left:3px solid #000;}
+.box.tip{border-color:#25d366;background:#f0fdf4;}
+.box.warn{border-color:#f59e0b;background:#fffbeb;}
+.box.info{border-color:#3b82f6;background:#eff6ff;}
+.box-label{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;margin-bottom:.4rem;}
+.box.tip .box-label{color:#16a34a;}
+.box.warn .box-label{color:#d97706;}
+.box.info .box-label{color:#2563eb;}
+.box p{margin:0;font-size:.85rem;color:#333;}
+
+/* ── URL / CODE ── */
+.url{display:inline-flex;align-items:center;gap:.5rem;background:#111;color:#fff;padding:.4rem .9rem;font-family:'Courier New',monospace;font-size:.8rem;border-radius:3px;margin:.4rem 0;}
+.url.green{background:#25d366;color:#000;}
+code{background:#f0f0f0;padding:.15rem .4rem;font-family:'Courier New',monospace;font-size:.8rem;border-radius:2px;color:#c00;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem;}
+.data-table th{background:#000;color:#fff;padding:.7rem 1rem;text-align:left;font-weight:600;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;}
+.data-table td{padding:.7rem 1rem;border-bottom:1px solid #e8e8e8;vertical-align:top;}
+.data-table tr:hover td{background:#fafafa;}
+.data-table td:first-child{font-weight:600;color:#111;white-space:nowrap;}
+
+/* ── WA BUTTON PREVIEW ── */
+.wa-preview{display:inline-flex;align-items:center;gap:.5rem;background:#25d366;color:#000;padding:.5rem 1.1rem;font-size:.8rem;font-weight:700;letter-spacing:.08em;border-radius:3px;}
+
+/* ── FOOTER LINE ── */
+.page-footer{position:absolute;bottom:2rem;left:4rem;right:4rem;display:flex;align-items:center;justify-content:space-between;font-size:.62rem;color:#bbb;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid #eee;padding-top:.8rem;}
+
+/* ── CONTACTS GRID ── */
+.contacts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#e8e8e8;border:1px solid #e8e8e8;margin:1.2rem 0;}
+.contact-card{background:#fff;padding:1.4rem 1.2rem;}
+.contact-card .role{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:#888;margin-bottom:.4rem;}
+.contact-card .name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.04em;line-height:1;margin-bottom:.5rem;}
+.contact-card .phone{font-size:.88rem;font-weight:600;}
+.contact-card .notes{font-size:.78rem;color:#888;margin-top:.4rem;}
+
+/* ── PRINT ── */
+@media print{
+  @page{size:A4 landscape;margin:0;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .cover{min-height:210mm;}
+  .page{min-height:210mm;padding:2.8rem 3.5rem;}
+  .page-footer{bottom:1.5rem;left:3.5rem;right:3.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-left">
+    <div class="cover-logo">
+      LA<span>Legarreta Automotores</span>
+    </div>
+    <div class="cover-title">
+      <h1>MANUAL<br>DE USO</h1>
+      <p>Guía completa para administrar el sitio web, actualizar el catálogo de vehículos y gestionar las consultas de clientes.</p>
+      <div class="cover-date">Versión 1.0 · Mayo 2026</div>
+    </div>
+  </div>
+  <div class="cover-right">
+    <div class="cover-monogram">LA</div>
+  </div>
+</div>
+
+<!-- PAGE 1 — VISIÓN GENERAL -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Visión general</div>
+    <div class="page-num">01</div>
+  </div>
+  <h2>¿QUÉ ES<br>Y CÓMO FUNCIONA?</h2>
+  <p class="lead">Tu sitio web es una herramienta de ventas que muestra tu catálogo, genera consultas por WhatsApp y te posiciona profesionalmente frente a compradores de pick-ups de alto impacto.</p>
+
+  <h3>Partes del sitio</h3>
+  <table class="data-table">
+    <thead><tr><th>Sección</th><th>Qué hace</th><th>¿Quién la ve?</th></tr></thead>
+    <tbody>
+      <tr><td>Inicio (Hero)</td><td>Primera impresión. Foto de fondo + botones CTA.</td><td>Todo visitante</td></tr>
+      <tr><td>Vehículos destacados</td><td>Muestra los 6 autos más recientes del catálogo.</td><td>Todo visitante</td></tr>
+      <tr><td>Catálogo completo</td><td>Página separada con filtros por tipo, marca y km.</td><td>Todo visitante</td></tr>
+      <tr><td>Pick-ups</td><td>Banner que resalta la especialidad del negocio.</td><td>Todo visitante</td></tr>
+      <tr><td>Financiación</td><td>Muestra las condiciones de financiación en USD.</td><td>Todo visitante</td></tr>
+      <tr><td>Testimonios</td><td>Reseñas de clientes anteriores.</td><td>Todo visitante</td></tr>
+      <tr><td>Contacto</td><td>Formulario que envía por WhatsApp + datos de contacto.</td><td>Todo visitante</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Dominio y hosting</h3>
+  <p>El sitio vive en:</p>
+  <div class="url">legarretaautomotores.com.ar</div>
+  <p style="margin-top:.8rem;">Está alojado en <strong>GitHub Pages</strong> (gratuito) y el DNS está configurado en <strong>Cloudflare</strong> (gratuito). SSL/HTTPS activo y automático.</p>
+
+  <div class="box info">
+    <div class="box-label">Info técnica</div>
+    <p>El sitio es HTML estático — no necesita servidor, no tiene costos de hosting. Las fotos de autos se almacenan en Supabase (base de datos gratuita). Modificaciones requieren editar el código fuente en GitHub.</p>
+  </div>
+  <div class="page-footer"><span>Legarreta Automotores</span><span>Manual de uso · v1.0</span></div>
+</div>
+
+<!-- PAGE 2 — CATÁLOGO: CÓMO AGREGAR AUTOS -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Catálogo de vehículos</div>
+    <div class="page-num">02</div>
+  </div>
+  <h2>AGREGAR O EDITAR<br>UN VEHÍCULO</h2>
+  <p class="lead">Los autos del catálogo se cargan en Supabase — una base de datos online. No necesitás saber programar para agregar un auto.</p>
+
+  <h3>Cómo acceder a Supabase</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Abrí el navegador y andá a</strong>
+        <span><div class="url">supabase.com → Sign in</div></span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Iniciá sesión con la cuenta del proyecto</strong>
+        <span>Pedile el usuario y contraseña a quien te armó el sitio. El proyecto se llama <code>legarreta</code>.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Andá a Table Editor → vehiculos_legarreta</strong>
+        <span>Ahí vas a ver todos los autos cargados en filas, como una planilla de Excel.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Hacé click en "+ Insert row" para agregar un auto nuevo</strong>
+        <span>Completá los campos y guardá. En segundos aparece en el sitio.</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Campos de cada vehículo</h3>
+  <table class="data-table">
+    <thead><tr><th>Campo</th><th>Qué poner</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td>marca</td><td>Marca del vehículo en mayúsculas</td><td>TOYOTA</td></tr>
+      <tr><td>modelo</td><td>Modelo completo en mayúsculas</td><td>HILUX SRX 2.8 4X4 AT</td></tr>
+      <tr><td>anio</td><td>Año como número</td><td>2022</td></tr>
+      <tr><td>km</td><td>Kilómetros como número (sin puntos)</td><td>85000</td></tr>
+      <tr><td>precio</td><td>Precio en USD como número</td><td>38000</td></tr>
+      <tr><td>tipo</td><td>Pick Up, SUV o Auto</td><td>Pick Up</td></tr>
+      <tr><td>descripcion</td><td>Descripción breve (opcional)</td><td>Impecable, service al día</td></tr>
+      <tr><td>fotos</td><td>Array de URLs de fotos (ver pág. 3)</td><td>["https://...jpg"]</td></tr>
+      <tr><td>activo</td><td>true = visible, false = oculto</td><td>true</td></tr>
+      <tr><td>reservado</td><td>true si ya está reservado</td><td>false</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box tip">
+    <div class="box-label">Consejo</div>
+    <p>Para <strong>ocultar un auto vendido</strong> sin borrarlo, cambiá <code>activo</code> a <code>false</code>. Así mantenés el historial.</p>
+  </div>
+  <div class="page-footer"><span>Legarreta Automotores</span><span>Manual de uso · v1.0</span></div>
+</div>
+
+<!-- PAGE 3 — FOTOS -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Fotos de vehículos</div>
+    <div class="page-num">03</div>
+  </div>
+  <h2>SUBIR FOTOS<br>AL CATÁLOGO</h2>
+  <p class="lead">Las fotos se almacenan en Supabase Storage y se vinculan al auto mediante URLs. Podés subir varias fotos por vehículo — la primera es la foto de portada.</p>
+
+  <h3>Cómo subir una foto</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>En Supabase, andá a Storage → legarreta-fotos</strong>
+        <span>Ahí están todas las imágenes organizadas.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Hacé click en "Upload files"</strong>
+        <span>Elegí las fotos del auto desde tu computadora. Recomendado: JPG, máximo 5 MB por foto.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Copiá la URL de cada foto</strong>
+        <span>Hacé click derecho sobre la foto → "Copy URL". La URL tiene el formato:<br><code>https://...supabase.co/storage/v1/object/public/legarreta-fotos/nombre.jpg</code></span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Pegá las URLs en el campo "fotos" del auto</strong>
+        <span>El formato es: <code>["url-foto-1.jpg", "url-foto-2.jpg", "url-foto-3.jpg"]</code><br>Si hay una sola foto: <code>["url-foto-1.jpg"]</code></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="box warn">
+    <div class="box-label">Importante</div>
+    <p>Usá siempre fotos con buena luz y fondo limpio. <strong>La primera foto de la lista es la que aparece en la grilla del catálogo</strong> — elegí la mejor vista del vehículo.</p>
+  </div>
+
+  <h3>Recomendaciones para las fotos</h3>
+  <table class="data-table">
+    <thead><tr><th>Aspecto</th><th>Recomendación</th></tr></thead>
+    <tbody>
+      <tr><td>Tamaño mínimo</td><td>1200 × 800 px</td></tr>
+      <tr><td>Formato</td><td>JPG (menor peso) o WebP</td></tr>
+      <tr><td>Peso máximo</td><td>3 MB por foto</td></tr>
+      <tr><td>Cantidad ideal</td><td>6 a 10 fotos por auto</td></tr>
+      <tr><td>Ángulos sugeridos</td><td>Frente, lateral, trasera, interior, motor, detalles</td></tr>
+      <tr><td>Luz</td><td>Exterior con luz natural, sin sombras duras</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>Legarreta Automotores</span><span>Manual de uso · v1.0</span></div>
+</div>
+
+<!-- PAGE 4 — WHATSAPP Y CONSULTAS -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">WhatsApp y consultas</div>
+    <div class="page-num">04</div>
+  </div>
+  <h2>CÓMO LLEGAN<br>LAS CONSULTAS</h2>
+  <p class="lead">El sitio está diseñado para que todo lead llegue por WhatsApp. No hay formulario que envíe emails — todo va directo al celular.</p>
+
+  <h3>Números configurados</h3>
+  <div class="contacts">
+    <div class="contact-card">
+      <div class="role">Titular</div>
+      <div class="name">AITOR</div>
+      <div class="phone">+54 9 2494 58-5374</div>
+      <div class="notes">Recibe todas las consultas del botón flotante y el panel principal</div>
+    </div>
+    <div class="contact-card">
+      <div class="role">Vendedor</div>
+      <div class="name">JAVIER</div>
+      <div class="phone">+54 9 2494 58-6516</div>
+      <div class="notes">Opción en el panel de contacto múltiple</div>
+    </div>
+    <div class="contact-card">
+      <div class="role">Vendedor</div>
+      <div class="name">JERÓNIMO</div>
+      <div class="phone">+54 9 11 3343-8645</div>
+      <div class="notes">Opción en el panel de contacto múltiple</div>
+    </div>
+  </div>
+
+  <h3>Panel de WhatsApp múltiple</h3>
+  <p>Cuando un cliente hace click en el botón verde <span class="wa-preview">⊕ CONSULTAR</span> (arriba a la derecha o el botón flotante), se abre un panel donde puede elegir a quién escribirle. El mensaje se pre-llena automáticamente con datos del vehículo que estaba mirando.</p>
+
+  <div class="box tip">
+    <div class="box-label">Consejo de ventas</div>
+    <p>Respondé los mensajes de WhatsApp <strong>dentro de los primeros 5 minutos</strong>. La probabilidad de cerrar una venta cae drásticamente después de 1 hora sin respuesta.</p>
+  </div>
+
+  <h3>Flujo de consulta de un cliente</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>Cliente entra al sitio y ve un auto en el catálogo</strong><span>Ve la foto, el modelo, el año, los km y el precio.</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>Hace click en "Consultar" o "Ver detalle"</strong><span>Se abre un modal con galería de fotos y la ficha completa.</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>Hace click en el botón de WhatsApp</strong><span>Se abre WhatsApp con un mensaje pre-cargado que incluye el modelo y año del auto.</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><strong>El mensaje llega a tu celular</strong><span>Ves exactamente qué auto preguntó. Podés responder directo.</span></div>
+    </div>
+  </div>
+
+  <div class="page-footer"><span>Legarreta Automotores</span><span>Manual de uso · v1.0</span></div>
+</div>
+
+<!-- PAGE 5 — CAMBIOS BÁSICOS -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Personalización</div>
+    <div class="page-num">05</div>
+  </div>
+  <h2>CAMBIOS<br>QUE PODÉS HACER</h2>
+  <p class="lead">Hay dos tipos de cambios: los que podés hacer vos mismo (sin código) y los que requieren ayuda técnica. Acá te explico cada uno.</p>
+
+  <h3>Sin ayuda técnica</h3>
+  <table class="data-table">
+    <thead><tr><th>Qué cambiar</th><th>Dónde</th></tr></thead>
+    <tbody>
+      <tr><td>Agregar / editar un auto</td><td>Supabase → Table Editor → vehiculos_legarreta</td></tr>
+      <tr><td>Marcar un auto como vendido</td><td>Supabase → campo <code>activo</code> = false</td></tr>
+      <tr><td>Marcar un auto como reservado</td><td>Supabase → campo <code>reservado</code> = true</td></tr>
+      <tr><td>Subir fotos nuevas</td><td>Supabase → Storage → legarreta-fotos</td></tr>
+      <tr><td>Cambiar el precio de un auto</td><td>Supabase → campo <code>precio</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Con ayuda técnica</h3>
+  <table class="data-table">
+    <thead><tr><th>Qué cambiar</th><th>Quién te ayuda</th></tr></thead>
+    <tbody>
+      <tr><td>Foto de fondo del hero (inicio)</td><td>Programador / quien armó el sitio</td></tr>
+      <tr><td>Texto de la página ("Pick-ups de alto impacto...")</td><td>Programador / quien armó el sitio</td></tr>
+      <tr><td>Logo o nombre de la empresa</td><td>Programador / quien armó el sitio</td></tr>
+      <tr><td>Números de WhatsApp</td><td>Programador / quien armó el sitio</td></tr>
+      <tr><td>Condiciones de financiación</td><td>Programador / quien armó el sitio</td></tr>
+      <tr><td>Testimonios</td><td>Programador / quien armó el sitio</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box info">
+    <div class="box-label">Transferencia del sitio</div>
+    <p>El código fuente del sitio está en GitHub en el repositorio <code>legarreta</code>. Si querés darle acceso a un programador propio para que haga cambios, necesitás invitarlo como colaborador en ese repositorio.</p>
+  </div>
+
+  <div class="page-footer"><span>Legarreta Automotores</span><span>Manual de uso · v1.0</span></div>
+</div>
+
+<!-- PAGE 6 — DATOS DE ACCESO -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">Datos de acceso</div>
+    <div class="page-num">06</div>
+  </div>
+  <h2>TUS ACCESOS<br>Y SERVICIOS</h2>
+  <p class="lead">Guardá esta página en un lugar seguro. Tiene todos los accesos y servicios que sostienen el sitio.</p>
+
+  <h3>Sitio web</h3>
+  <table class="data-table">
+    <thead><tr><th>Servicio</th><th>URL</th><th>Para qué sirve</th></tr></thead>
+    <tbody>
+      <tr><td>Sitio en vivo</td><td>legarretaautomotores.com.ar</td><td>Lo que ve el cliente</td></tr>
+      <tr><td>GitHub Pages</td><td>github.com/santiagomfunes-crypto/legarreta</td><td>Código fuente del sitio</td></tr>
+      <tr><td>Cloudflare DNS</td><td>dash.cloudflare.com</td><td>Dominio y SSL (cuenta: Legarreta.automotores@...)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Base de datos y fotos</h3>
+  <table class="data-table">
+    <thead><tr><th>Servicio</th><th>URL</th><th>Para qué sirve</th></tr></thead>
+    <tbody>
+      <tr><td>Supabase (catálogo)</td><td>supabase.com</td><td>Tabla de autos y Storage de fotos</td></tr>
+      <tr><td>Proyecto Supabase</td><td>pgnmpxqljxrpnvexcygh.supabase.co</td><td>ID del proyecto</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Dominio</h3>
+  <table class="data-table">
+    <thead><tr><th>Dato</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Dominio registrado</td><td>legarretaautomotores.com.ar</td></tr>
+      <tr><td>Registrador</td><td>NIC.ar</td></tr>
+      <tr><td>Nameservers</td><td>bailey.ns.cloudflare.com / john.ns.cloudflare.com</td></tr>
+      <tr><td>SSL</td><td>Activo (Cloudflare Flexible)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box warn">
+    <div class="box-label">Importante — Renovación del dominio</div>
+    <p>El dominio <strong>legarretaautomotores.com.ar</strong> se renueva anualmente en NIC.ar. Si no se renueva a tiempo, el sitio queda fuera de línea. Revisá la fecha de vencimiento en <code>nic.ar → Mis dominios</code>.</p>
+  </div>
+
+  <h3>Contacto técnico</h3>
+  <p>Para cualquier cambio técnico o problema con el sitio, contactá a:</p>
+  <table class="data-table">
+    <thead><tr><th>Contacto</th><th>Datos</th></tr></thead>
+    <tbody>
+      <tr><td>Santiago Funes</td><td>santiagomfunes@gmail.com · quien armó el sitio</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer"><span>Legarreta Automotores</span><span>Manual de uso · v1.0</span></div>
+</div>
+
+</body>
+</html>

@@ -284,6 +284,7 @@ function doLogin(){
     sessionStorage.setItem('la_auth','1');
     document.getElementById('login').style.display='none';
     document.getElementById('admin').style.display='block';
+    checkHealth();
     loadVehicles();
   } else {
     document.getElementById('loginErr').style.display='block';
@@ -294,6 +295,7 @@ document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')
 if(sessionStorage.getItem('la_auth')==='1'){
   document.getElementById('login').style.display='none';
   document.getElementById('admin').style.display='block';
+  checkHealth();
   loadVehicles();
 }
 
@@ -304,6 +306,29 @@ function switchTab(t){
   });
   document.getElementById('sec-list').classList.toggle('active',t==='list');
   document.getElementById('sec-add').classList.toggle('active',t==='add');
+}
+
+// ── HEALTH CHECK ─────────────────────────────────────────────────
+async function checkHealth(){
+  try{
+    const r=await fetch(`${SUPA}/storage/v1/bucket/${BUCKET}`,{
+      headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`}
+    });
+    if(!r.ok){
+      console.error('Storage bucket missing:',await r.text());
+      showHealthBanner('⚠️ El bucket de fotos no existe. Las fotos no se podrán subir. Contactá a soporte.');
+    }
+  }catch(e){console.error('Health check failed:',e);}
+}
+function showHealthBanner(msg){
+  let b=document.getElementById('healthBanner');
+  if(!b){
+    b=document.createElement('div');
+    b.id='healthBanner';
+    b.style.cssText='background:#7c1515;color:#fca5a5;padding:.7rem 1.2rem;font-size:.78rem;text-align:center;position:sticky;top:60px;z-index:99;';
+    document.getElementById('admin').insertBefore(b,document.querySelector('.main'));
+  }
+  b.textContent=msg;
 }
 
 // ── DATA ──────────────────────────────────────────────────────────
@@ -636,18 +661,27 @@ async function addVehicle(){
 
   // Upload fotos
   let fotos=[];
+  let fotoErrors=0;
   if(pendingFiles.length){
     const fill=document.getElementById('progFill');
     let done=0;
     for(const file of pendingFiles){
       const ext=file.name.split('.').pop().toLowerCase()||'jpg';
       const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const r=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
-        method:'POST',
-        headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':file.type||'image/jpeg'},
-        body:file
-      });
-      if(r.ok)fotos.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
+      try{
+        const r=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
+          method:'POST',
+          headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':file.type||'image/jpeg'},
+          body:file
+        });
+        if(r.ok){
+          fotos.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
+        } else {
+          fotoErrors++;
+          const errBody=await r.text().catch(()=>'');
+          console.error(`Error subiendo foto (${r.status}):`,errBody);
+        }
+      }catch(e){fotoErrors++;console.error('Error subiendo foto:',e);}
       done++;fill.style.width=`${(done/pendingFiles.length)*100}%`;
     }
     if(fotos.length){
@@ -664,7 +698,13 @@ async function addVehicle(){
   ['nMarca','nModelo','nAnio','nKm','nPrecio','nDesc'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('nTipo').value='SUV';
   pendingFiles=[];previews.innerHTML='';
-  showFormMsg('Vehículo agregado ✓','ok');
+  if(fotoErrors>0&&fotos.length===0){
+    showFormMsg(`Vehículo agregado pero fallaron las ${fotoErrors} fotos. Revisá la conexión y agregá las fotos desde "Editar".`,'err');
+  } else if(fotoErrors>0){
+    showFormMsg(`Vehículo agregado. ${fotos.length} foto(s) subidas, ${fotoErrors} fallaron.`,'ok');
+  } else {
+    showFormMsg('Vehículo agregado ✓','ok');
+  }
   btn.disabled=false;btn.textContent='Guardar vehículo';
 
   // Reload list

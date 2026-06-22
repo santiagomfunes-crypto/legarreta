@@ -1,0 +1,49 @@
+name: Bucket Heartbeat
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # cada 6 horas
+  workflow_dispatch:          # permite correrlo a mano desde GitHub
+
+jobs:
+  check-and-restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar bucket legarreta-fotos
+        id: check
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://pgnmpxqljxrpnvexcygh.supabase.co/storage/v1/bucket/legarreta-fotos" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}")
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          echo "HTTP status del bucket: $STATUS"
+
+      - name: Recrear bucket si no existe
+        if: steps.check.outputs.status != '200'
+        run: |
+          echo "⚠️ Bucket no encontrado (HTTP ${{ steps.check.outputs.status }}). Recreando..."
+          RESULT=$(curl -s -w "\nHTTP:%{http_code}" -X POST \
+            "https://pgnmpxqljxrpnvexcygh.supabase.co/storage/v1/bucket" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "id": "legarreta-fotos",
+              "name": "legarreta-fotos",
+              "public": true,
+              "file_size_limit": 10485760,
+              "allowed_mime_types": ["image/jpeg","image/jpg","image/png","image/webp","image/heic","image/heif"]
+            }')
+          echo "$RESULT"
+          HTTP_CODE=$(echo "$RESULT" | grep "HTTP:" | cut -d: -f2)
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Bucket recreado exitosamente."
+          else
+            echo "❌ Error al recrear bucket. Revisá el log."
+            exit 1
+          fi
+
+      - name: Bucket OK
+        if: steps.check.outputs.status == '200'
+        run: echo "✅ Bucket legarreta-fotos OK."

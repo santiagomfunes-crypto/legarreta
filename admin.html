@@ -273,6 +273,30 @@ const SERVICE='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 const BUCKET='legarreta-fotos';
 const PASS='legarreta2024';
 
+// Comprime imagen a JPEG ≤1920px, ~85% calidad. Resuelve fotos grandes de iPhone (HEIC/RAW).
+async function compressImage(file){
+  return new Promise((resolve)=>{
+    const MAX=1920;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+        else if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        canvas.toBlob(blob=>resolve(blob||file),'image/jpeg',0.85);
+      };
+      img.onerror=()=>resolve(file);
+      img.src=e.target.result;
+    };
+    reader.onerror=()=>resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 let DB=[];
 let pendingFiles=[];
 let expandedId=null;
@@ -530,15 +554,17 @@ async function uploadFotos(id,files){
   let done=0;
   const newUrls=[];
   for(const file of files){
-    const ext=file.name.split('.').pop().toLowerCase()||'jpg';
-    const path=`${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const compressed=await compressImage(file);
+    const path=`${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
     const res=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
       method:'POST',
-      headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':file.type||'image/jpeg'},
-      body:file
+      headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':'image/jpeg'},
+      body:compressed
     });
     if(res.ok){
       newUrls.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
+    } else {
+      console.error(`Error subiendo foto (${res.status}):`,await res.text().catch(()=>''));
     }
     done++;
     fill.style.width=`${(done/total)*100}%`;
@@ -666,13 +692,13 @@ async function addVehicle(){
     const fill=document.getElementById('progFill');
     let done=0;
     for(const file of pendingFiles){
-      const ext=file.name.split('.').pop().toLowerCase()||'jpg';
-      const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const compressed=await compressImage(file);
+      const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
       try{
         const r=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
           method:'POST',
-          headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':file.type||'image/jpeg'},
-          body:file
+          headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':'image/jpeg'},
+          body:compressed
         });
         if(r.ok){
           fotos.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);

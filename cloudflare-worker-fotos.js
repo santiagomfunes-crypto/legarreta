@@ -8,22 +8,21 @@
 //   cada foto UNA vez; después la cachea Cloudflare. El egress de Supabase se
 //   desploma → no se revienta el límite de 5 GB/mes del plan gratis.
 //
-//   Ruta pública:  https://legarretaautomotores.com.ar/foto/<path>
-//   Origen real:   https://pgnmpxqljxrpnvexcygh.supabase.co/storage/v1/object/public/legarreta-fotos/<path>
+// ESTADO: DESPLEGADO (jul-24-2026).
+//   - Worker:     legarreta-fotos
+//   - Cuenta CF:  d38d13a13718e9fa0a79d54ecbc3b7f6 (Santiagomfunes1234@icloud.com)
+//   - URL activa: https://legarreta-fotos.sfunes-apps.workers.dev/foto/<path>
+//   - Origen:     https://pgnmpxqljxrpnvexcygh.supabase.co/storage/v1/object/public/legarreta-fotos/<path>
+//   - El catálogo (catalogo.html → mapSupa) ya reescribe las URLs a esta workers.dev.
 //
-// CÓMO INSTALARLO (dashboard, ~5 min, sin API token):
-//   1. Cloudflare → Workers & Pages → Create → Create Worker → nombre: "legarreta-fotos"
-//   2. Deploy → Edit code → borrar el ejemplo y pegar TODO este archivo → Deploy
-//   3. En el Worker → Settings → Domains & Routes → Add → Route:
-//         Zone:  legarretaautomotores.com.ar
-//         Route: legarretaautomotores.com.ar/foto/*
-//   4. Avisar a Claude Code: "el worker está en /foto/*" → se reescriben las
-//      URLs de las fotos en la web para que usen /foto/ (hasta ese momento NO
-//      tocar la web, si no las imágenes apuntan a una ruta que todavía no existe).
+//   NOTA: se usó el subdominio workers.dev (no una ruta en el dominio propio)
+//   porque legarretaautomotores.com.ar vive en OTRA cuenta de Cloudflare, no en
+//   esta. Si algún día se quiere /foto/* en el dominio propio, hay que deployar
+//   el Worker + ruta en la cuenta que tiene la zona.
 //
-// PROBAR (después de instalar): abrir en el navegador
-//   https://legarretaautomotores.com.ar/foto/<id>/<archivo>.jpg
-//   (tomar un path real de una foto que hoy funcione en el catálogo)
+// REDEPLOY (si se edita este archivo): con un API token con Workers Scripts:Edit,
+//   PUT https://api.cloudflare.com/client/v4/accounts/<acct>/workers/scripts/legarreta-fotos
+//   (multipart: metadata main_module + este archivo como module).
 // ============================================================================
 
 const ORIGIN = 'https://pgnmpxqljxrpnvexcygh.supabase.co/storage/v1/object/public/legarreta-fotos';

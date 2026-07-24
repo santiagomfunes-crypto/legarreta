@@ -277,7 +277,8 @@ const BUCKET='legarreta-fotos';
 const ADMIN_EMAIL='admin@legarretaautomotores.com.ar';
 let TOKEN=sessionStorage.getItem('la_token')||null;
 
-// Comprime imagen a JPEG ≤1920px, ~85% calidad. Resuelve fotos grandes de iPhone (HEIC/RAW).
+// Comprime imagen a JPEG ≤1600px, ~65% calidad (≈130-150 KB). Baja el egress de Supabase
+// para no reventar el límite gratis. Resuelve fotos grandes de iPhone (HEIC/RAW).
 // HEIC/HEIF: los navegadores que no son Safari NO lo decodifican en <img>/canvas, así que
 // primero lo convertimos a JPEG con heic2any. Sin esto, la foto original se subía sin comprimir
 // (rebote 413 por tamaño) o quedaba como HEIC con nombre .jpg que después no se ve en el catálogo.
@@ -298,7 +299,7 @@ async function compressImage(file){
     }
   }
   return new Promise((resolve)=>{
-    const MAX=1920;
+    const MAX=1600;
     const reader=new FileReader();
     reader.onload=e=>{
       const img=new Image();
@@ -309,7 +310,7 @@ async function compressImage(file){
         const canvas=document.createElement('canvas');
         canvas.width=w;canvas.height=h;
         canvas.getContext('2d').drawImage(img,0,0,w,h);
-        canvas.toBlob(blob=>resolve(blob||src),'image/jpeg',0.85);
+        canvas.toBlob(blob=>resolve(blob||src),'image/jpeg',0.65);
       };
       img.onerror=()=>resolve(src);
       img.src=e.target.result;

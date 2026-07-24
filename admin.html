@@ -270,9 +270,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 const SUPA='https://pgnmpxqljxrpnvexcygh.supabase.co';
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NDYxMDEsImV4cCI6MjA5MjAyMjEwMX0.lz6LQ3gRkGY4g0Dka0JD6au1OgsA4W_iDnlfCGUoDyk';
-const SERVICE='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnbm1weHFsanhycG52ZXhjeWdoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQ0NjEwMSwiZXhwIjoyMDkyMDIyMTAxfQ.4zr91CpOYGIofIRmEI-bva_Aq_DCBXyhSNfy-yIGbJ0';
 const BUCKET='legarreta-fotos';
-const PASS='legarreta2024';
+// Seguridad: ya NO hay service_role en el cliente. El admin se loguea contra Supabase Auth
+// y obtiene un JWT temporal; las escrituras las autoriza RLS (solo rol authenticated).
+// El navegador solo tiene la ANON key, que es pública por diseño.
+const ADMIN_EMAIL='admin@legarretaautomotores.com.ar';
+let TOKEN=sessionStorage.getItem('la_token')||null;
 
 // Comprime imagen a JPEG ≤1920px, ~85% calidad. Resuelve fotos grandes de iPhone (HEIC/RAW).
 // HEIC/HEIF: los navegadores que no son Safari NO lo decodifican en <img>/canvas, así que
@@ -321,26 +324,43 @@ let pendingFiles=[];
 let expandedId=null;
 
 // ── AUTH ──────────────────────────────────────────────────────────
-function doLogin(){
-  const v=document.getElementById('pw').value;
-  if(v===PASS){
-    sessionStorage.setItem('la_auth','1');
-    document.getElementById('login').style.display='none';
-    document.getElementById('admin').style.display='block';
-    checkHealth();
-    loadVehicles();
-  } else {
-    document.getElementById('loginErr').style.display='block';
-  }
-}
-function logout(){sessionStorage.removeItem('la_auth');location.reload();}
-document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-if(sessionStorage.getItem('la_auth')==='1'){
+function enterAdmin(){
   document.getElementById('login').style.display='none';
   document.getElementById('admin').style.display='block';
   checkHealth();
   loadVehicles();
 }
+async function doLogin(){
+  const v=document.getElementById('pw').value;
+  const btn=document.querySelector('#login .btn-primary');
+  const err=document.getElementById('loginErr');
+  err.style.display='none';
+  if(btn){btn.disabled=true;btn.textContent='Entrando…';}
+  try{
+    const r=await fetch(`${SUPA}/auth/v1/token?grant_type=password`,{
+      method:'POST',
+      headers:{'apikey':ANON,'Content-Type':'application/json'},
+      body:JSON.stringify({email:ADMIN_EMAIL,password:v})
+    });
+    const data=await r.json();
+    if(r.ok&&data.access_token){
+      TOKEN=data.access_token;
+      sessionStorage.setItem('la_token',TOKEN);
+      enterAdmin();
+    } else {
+      err.style.display='block';
+    }
+  }catch(e){
+    console.error('Login falló:',e);
+    err.style.display='block';
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Entrar';}
+  }
+}
+function logout(){sessionStorage.removeItem('la_token');TOKEN=null;location.reload();}
+document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+// Restaurar sesión si hay token guardado (expira ~1h; si venció, una acción dará 401 y se re-loguea)
+if(TOKEN){ enterAdmin(); }
 
 // ── TABS ──────────────────────────────────────────────────────────
 function switchTab(t){
@@ -355,9 +375,9 @@ function switchTab(t){
 async function checkHealth(){
   try{
     const r=await fetch(`${SUPA}/storage/v1/bucket/${BUCKET}`,{
-      headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`}
+      headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`}
     });
-    if(!r.ok){
+    if(r.status===404){
       console.error('Storage bucket missing:',await r.text());
       showHealthBanner('⚠️ El bucket de fotos no existe. Las fotos no se podrán subir. Contactá a soporte.');
     }
@@ -377,7 +397,7 @@ function showHealthBanner(msg){
 // ── DATA ──────────────────────────────────────────────────────────
 async function loadVehicles(){
   const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?select=*&order=created_at.desc`,{
-    headers:{'apikey':ANON,'Authorization':`Bearer ${SERVICE}`}
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`}
   });
   DB=await res.json();
   document.getElementById('badgeTotal').textContent=`${DB.length} vehículos`;
@@ -519,7 +539,7 @@ async function saveVehicle(id){
   });
   const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
     method:'PATCH',
-    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`,'Content-Type':'application/json','Prefer':'return=representation'},
     body:JSON.stringify(updates)
   });
   const data=await res.json();
@@ -537,7 +557,7 @@ async function saveVehicle(id){
 async function toggleActivo(id,val){
   const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
     method:'PATCH',
-    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`,'Content-Type':'application/json','Prefer':'return=representation'},
     body:JSON.stringify({activo:val})
   });
   const data=await res.json();
@@ -558,7 +578,7 @@ async function deleteVehicle(id){
   if(!confirm('¿Eliminar este vehículo? Esta acción no se puede deshacer.'))return;
   await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
     method:'DELETE',
-    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`}
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`}
   });
   DB=DB.filter(x=>x.id!=id);
   expandedId=null;
@@ -579,7 +599,7 @@ async function uploadFotos(id,files){
       const path=`${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
       const res=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
         method:'POST',
-        headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':compressed.type||'image/jpeg'},
+        headers:{'Authorization':`Bearer ${TOKEN}`,'Content-Type':compressed.type||'image/jpeg'},
         body:compressed
       });
       if(res.ok){
@@ -605,7 +625,7 @@ async function uploadFotos(id,files){
   const merged=[...(v.fotos||[]),...newUrls];
   const res2=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
     method:'PATCH',
-    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`,'Content-Type':'application/json','Prefer':'return=representation'},
     body:JSON.stringify({fotos:merged})
   });
   const data=await res2.json();
@@ -633,7 +653,7 @@ async function deleteFoto(id,idx,e){
   const updated=(v.fotos||[]).filter((_,i)=>i!==idx);
   const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
     method:'PATCH',
-    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`,'Content-Type':'application/json','Prefer':'return=representation'},
     body:JSON.stringify({fotos:updated})
   });
   const data=await res.json();
@@ -705,7 +725,7 @@ async function addVehicle(){
   // Insert vehicle first
   const res=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta`,{
     method:'POST',
-    headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json','Prefer':'return=representation'},
+    headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`,'Content-Type':'application/json','Prefer':'return=representation'},
     body:JSON.stringify({marca,modelo,anio,km,tipo,precio,descripcion:desc||null,activo:true,fotos:[]})
   });
   const data=await res.json();
@@ -729,7 +749,7 @@ async function addVehicle(){
         const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
         const r=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
           method:'POST',
-          headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':compressed.type||'image/jpeg'},
+          headers:{'Authorization':`Bearer ${TOKEN}`,'Content-Type':compressed.type||'image/jpeg'},
           body:compressed
         });
         if(r.ok){
@@ -746,7 +766,7 @@ async function addVehicle(){
     if(fotos.length){
       await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${newId}`,{
         method:'PATCH',
-        headers:{'apikey':SERVICE,'Authorization':`Bearer ${SERVICE}`,'Content-Type':'application/json'},
+        headers:{'apikey':ANON,'Authorization':`Bearer ${TOKEN}`,'Content-Type':'application/json'},
         body:JSON.stringify({fotos})
       });
     }

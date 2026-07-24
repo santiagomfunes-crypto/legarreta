@@ -402,12 +402,18 @@ const PAGE_SIZE=12;
 let currentPage=1;
 const iArr='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
 
+// Las fotos se sirven vía Cloudflare Worker (cache en el borde) en vez de pegarle
+// directo a Supabase → baja el egress de Supabase para no reventar el límite gratis.
+const FOTO_CDN='https://legarreta-fotos.sfunes-apps.workers.dev/foto/';
+const cdnFoto=u=>(u&&typeof u==='string')?u.replace(SUPA+'/storage/v1/object/public/legarreta-fotos/',FOTO_CDN):u;
+
 function mapSupa(v){
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const fotos=(v.fotos||[]).map(cdnFoto);
   return {
     id:v.id, cat:v.tipo||'Otro', marca:v.marca, modelo:v.modelo,
     año:v.anio, km:v.km, precio:v.precio,
-    img:v.fotos?.[0]||null, fotos:v.fotos||[],
+    img:fotos[0]||null, fotos:fotos,
     descripcion:v.descripcion,
     nuevo: v.created_at ? new Date(v.created_at).getTime() > sevenDaysAgo : false,
     reservado: v.reservado || false,

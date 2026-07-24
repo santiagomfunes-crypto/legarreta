@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Admin — Legarreta Automotores</title>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{--black:#000;--dark:#0a0a0a;--card:#111;--card2:#161616;--border:#222;--b2:#2a2a2a;--white:#fff;--gray:#888;--gray2:#555;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;}
@@ -274,7 +275,25 @@ const BUCKET='legarreta-fotos';
 const PASS='legarreta2024';
 
 // Comprime imagen a JPEG ≤1920px, ~85% calidad. Resuelve fotos grandes de iPhone (HEIC/RAW).
+// HEIC/HEIF: los navegadores que no son Safari NO lo decodifican en <img>/canvas, así que
+// primero lo convertimos a JPEG con heic2any. Sin esto, la foto original se subía sin comprimir
+// (rebote 413 por tamaño) o quedaba como HEIC con nombre .jpg que después no se ve en el catálogo.
 async function compressImage(file){
+  let src=file;
+  const isHeic=/hei[cf]/i.test(file.type)||/\.hei[cf]$/i.test(file.name||'');
+  if(isHeic){
+    if(!window.heic2any){
+      // El decodificador no cargó (sin internet / CDN caído): avisamos en vez de subir algo roto.
+      throw new Error('No se pudo procesar la foto HEIC (falló el conversor). Probá de nuevo con conexión, o convertí la foto a JPG.');
+    }
+    try{
+      const out=await window.heic2any({blob:file,toType:'image/jpeg',quality:0.9});
+      src=Array.isArray(out)?out[0]:out;
+    }catch(e){
+      console.error('HEIC convert falló:',e);
+      throw new Error('No se pudo convertir la foto HEIC a JPG. Probá sacarla/exportarla como JPG desde el teléfono.');
+    }
+  }
   return new Promise((resolve)=>{
     const MAX=1920;
     const reader=new FileReader();
@@ -287,13 +306,13 @@ async function compressImage(file){
         const canvas=document.createElement('canvas');
         canvas.width=w;canvas.height=h;
         canvas.getContext('2d').drawImage(img,0,0,w,h);
-        canvas.toBlob(blob=>resolve(blob||file),'image/jpeg',0.85);
+        canvas.toBlob(blob=>resolve(blob||src),'image/jpeg',0.85);
       };
-      img.onerror=()=>resolve(file);
+      img.onerror=()=>resolve(src);
       img.src=e.target.result;
     };
-    reader.onerror=()=>resolve(file);
-    reader.readAsDataURL(file);
+    reader.onerror=()=>resolve(src);
+    reader.readAsDataURL(src);
   });
 }
 
@@ -553,23 +572,35 @@ async function uploadFotos(id,files){
   const total=files.length;
   let done=0;
   const newUrls=[];
+  let lastErr='';
   for(const file of files){
-    const compressed=await compressImage(file);
-    const path=`${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-    const res=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
-      method:'POST',
-      headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':'image/jpeg'},
-      body:compressed
-    });
-    if(res.ok){
-      newUrls.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
-    } else {
-      console.error(`Error subiendo foto (${res.status}):`,await res.text().catch(()=>''));
+    try{
+      const compressed=await compressImage(file);
+      const path=`${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+      const res=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
+        method:'POST',
+        headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':compressed.type||'image/jpeg'},
+        body:compressed
+      });
+      if(res.ok){
+        newUrls.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
+      } else {
+        lastErr = res.status===413 ? 'La foto pesa demasiado (máx 10 MB).' : `Error del servidor (${res.status}).`;
+        console.error(`Error subiendo foto (${res.status}):`,await res.text().catch(()=>''));
+      }
+    }catch(e){
+      lastErr = e.message || 'No se pudo procesar la foto.';
+      console.error('Error procesando foto:',e);
     }
     done++;
     fill.style.width=`${(done/total)*100}%`;
   }
-  if(!newUrls.length)return;
+  if(!newUrls.length){
+    if(lastErr) showMsg(id, lastErr, 'err');
+    setTimeout(()=>{fill.style.width='0';},1500);
+    return;
+  }
+  if(lastErr) showMsg(id, `Algunas fotos no se pudieron subir: ${lastErr}`, 'err');
   const v=DB.find(x=>x.id==id);
   const merged=[...(v.fotos||[]),...newUrls];
   const res2=await fetch(`${SUPA}/rest/v1/vehiculos_legarreta?id=eq.${id}`,{
@@ -688,26 +719,28 @@ async function addVehicle(){
   // Upload fotos
   let fotos=[];
   let fotoErrors=0;
+  let fotoErrMsg='';
   if(pendingFiles.length){
     const fill=document.getElementById('progFill');
     let done=0;
     for(const file of pendingFiles){
-      const compressed=await compressImage(file);
-      const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
       try{
+        const compressed=await compressImage(file);
+        const path=`${newId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
         const r=await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${path}`,{
           method:'POST',
-          headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':'image/jpeg'},
+          headers:{'Authorization':`Bearer ${SERVICE}`,'Content-Type':compressed.type||'image/jpeg'},
           body:compressed
         });
         if(r.ok){
           fotos.push(`${SUPA}/storage/v1/object/public/${BUCKET}/${path}`);
         } else {
           fotoErrors++;
+          fotoErrMsg = r.status===413 ? 'La foto pesa demasiado (máx 10 MB).' : `Error del servidor (${r.status}).`;
           const errBody=await r.text().catch(()=>'');
           console.error(`Error subiendo foto (${r.status}):`,errBody);
         }
-      }catch(e){fotoErrors++;console.error('Error subiendo foto:',e);}
+      }catch(e){fotoErrors++;fotoErrMsg=e.message||'No se pudo procesar la foto.';console.error('Error procesando foto:',e);}
       done++;fill.style.width=`${(done/pendingFiles.length)*100}%`;
     }
     if(fotos.length){
@@ -725,9 +758,9 @@ async function addVehicle(){
   document.getElementById('nTipo').value='SUV';
   pendingFiles=[];previews.innerHTML='';
   if(fotoErrors>0&&fotos.length===0){
-    showFormMsg(`Vehículo agregado pero fallaron las ${fotoErrors} fotos. Revisá la conexión y agregá las fotos desde "Editar".`,'err');
+    showFormMsg(`Vehículo agregado, pero fallaron las ${fotoErrors} fotos. ${fotoErrMsg} Agregalas desde "Editar".`,'err');
   } else if(fotoErrors>0){
-    showFormMsg(`Vehículo agregado. ${fotos.length} foto(s) subidas, ${fotoErrors} fallaron.`,'ok');
+    showFormMsg(`Vehículo agregado. ${fotos.length} foto(s) subidas, ${fotoErrors} fallaron. ${fotoErrMsg}`,'ok');
   } else {
     showFormMsg('Vehículo agregado ✓','ok');
   }
